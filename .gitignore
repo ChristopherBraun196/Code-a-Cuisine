@@ -14,11 +14,13 @@ yarn-error.log
 # IDEs and editors
 .idea/
 .project
-.classpath
+.classpath 
 .c9/
 *.launch
 .settings/
 *.sublime-workspace
+.git
+.vscode
 
 # Visual Studio Code
 .vscode/*
@@ -45,3 +47,5 @@ Thumbs.db
 
 # Lokale Arbeits-Logs (Claude Code / Git-Hooks)
 /logs
+CLAUDE.md
+Checklist
