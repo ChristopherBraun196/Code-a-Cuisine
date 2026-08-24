@@ -3,17 +3,210 @@
 .hero {
   position: relative;
   background-color: $color-olive;
+  height: 100vh;
+  overflow: hidden;
 
   &__inner {
-    max-width: 1440px;
+    max-width: 90rem;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: stretch;
     gap: 2rem;
+    padding-inline: 2rem;
   }
 
   &__content {
     padding-top: 8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  &__top {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  &__kicker {
+    margin: 0;
+    display: flex;
+    font-size: 3rem;
+    font-weight: 600;
+    padding-top: 8rem;
+
+    @media (max-width: 84.375rem) {
+      font-size: 2.5rem;
+    }
+
+    @media (max-width: 64rem) and (orientation: portrait) {
+      font-size: 1.5rem; // iPad Pro 12.9" und schmaler
+    }
+
+    @media (max-width: 51.875rem) and (orientation: portrait) {
+      font-size: 1.25rem; // iPad Pro 11" und schmaler
+    }
+
+    @media (max-width: 70.8125rem) and (orientation: landscape) {
+      font-size: 1.75rem;
+      padding-top: 4rem;
+    }
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 6.5rem;
+    font-weight: 700;
+
+    @media (max-width: 84.375rem) {
+      font-size: 5.5rem;
+    }
+
+    @media (max-width: 64rem) and (orientation: portrait) {
+      font-size: 4.25rem; //iPad Pro 12.9" und schmaler
+    }
+
+    @media (max-width: 51.875rem) and (orientation: portrait) {
+      font-size: 3rem; // iPad Pro 11" und schmaler
+    }
+
+    @media (max-width: 70.8125rem) and (orientation: landscape) {
+      font-size: 4.5rem;
+    }
+  }
+
+  &__cta {
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    display: inline-block;
+    text-decoration: none;
+    background-color: $color-cream;
+    color: $color-green-light;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+
+    &:hover {
+      font-weight: 700;
+      background-color: $color-cream-hover;
+    }
+
+    @media (max-width: 64rem) and (orientation: portrait) {
+      font-size: 1.25rem; // iPad Pro 12.9" und schmaler
+    }
+
+    @media (max-width: 51.875rem) and (orientation: portrait) {
+      padding: 0.55rem 1.25rem; // iPad Pro 11" und schmaler
+    }
+
+    @media (max-width: 70.8125rem) and (orientation: landscape) {
+      font-size: 1rem;
+    }
+  }
+
+  &__bottom {
+    position: relative;
+  }
+
+  &__secondary {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding-bottom: 10rem;
+    cursor: pointer;
+    white-space: nowrap;
+
+    @media (max-width: 64rem) and (orientation: portrait) {
+      font-size: 1.35rem; // iPad Pro 12.9" und schmaler
+    }
+
+    @media (max-width: 51.875rem) and (orientation: portrait) {
+      font-size: 1.25rem; // iPad Pro 11" und schmaler
+    }
+
+    @media (max-width: 74.625rem) and (orientation: landscape) {
+      font-size: 1.5rem;
+      padding-bottom: 13rem;
+    }
+
+    &-link {
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: $color-cream;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+
+      @media (max-width: 64rem) and (orientation: portrait) {
+        font-size: 0.875rem; // iPad Pro 12.9" und schmaler
+      }
+
+      @media (max-width: 74.625rem) and (orientation: landscape) {
+        font-size: 1rem;
+      }
+
+      &:hover {
+        &:hover {
+          background-color: $color-olive-footer;
+        }
+      }
+    }
+  }
+
+  &__gallery {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    flex-shrink: 0;
+
+    img:nth-child(4),
+    img:nth-child(5) {
+      display: none;
+    }
+
+    @media (min-width: 90.0625rem), (orientation: portrait) {
+      img:nth-child(4),
+      img:nth-child(5) {
+        display: block;
+      }
+    }
+
+    img {
+      --img-width: clamp(22.5rem, 0.4rem + 34.5vw, 31.5rem);
+      width: var(--img-width);
+
+      @media (orientation: portrait) {
+        --img-width: clamp(20rem, 32.75vh, 31.5rem);
+      }
+
+      &:not(:first-child) {
+        margin-top: calc(var(--img-width) * -0.305);
+      }
+    }
+  }
+
+  &__imprint {
+    position: absolute;
+    bottom: 1rem;
+    left: 40%;
+    transform: translateX(-50%);
+    color: $color-cream;
+    font-size: 1rem;
+    text-decoration: none;
+    font-family: 'Ubuntu';
+    padding: 0.75rem;
+
+    @media (max-width: 74.625rem) and (orientation: landscape) {
+      font-size: 0.875rem;
+      bottom: 2rem;
+    }
+
+    &:hover {
+      background-color: $color-olive-footer;
+    }
   }
 }

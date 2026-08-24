@@ -49,3 +49,6 @@ Thumbs.db
 /logs
 CLAUDE.md
 Checklist
+
+# Private Dev-Tools (kein Teil der App)
+/tools

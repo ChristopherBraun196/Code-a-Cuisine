@@ -2,12 +2,14 @@
   position: absolute;
   top: 0;
   left: 0;
+  right: 0;
   z-index: 10;
+  max-width: 90rem;
+  margin: 0 auto;
   padding: 1.5rem;
 
   img {
-    max-width: 140px;
+    max-width: 8.75rem;
     height: auto;
-    filter: brightness(0) invert(1);
   }
 }
