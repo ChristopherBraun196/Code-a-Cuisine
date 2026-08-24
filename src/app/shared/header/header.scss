@@ -1,0 +1,13 @@
+:host {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  padding: 1.5rem;
+
+  img {
+    max-width: 140px;
+    height: auto;
+    filter: brightness(0) invert(1);
+  }
+}

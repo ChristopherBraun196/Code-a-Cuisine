@@ -1,2 +1,19 @@
 @use 'styles/fonts';
-@use 'styles/colors';
+@use 'styles/colors' as*;
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Ubuntu', sans-serif;
+}
+
+body {
+  box-sizing: border-box;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 16px;
+  color: $color-cream;
+  margin: 0;
+}

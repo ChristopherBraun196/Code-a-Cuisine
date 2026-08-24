@@ -1,0 +1,19 @@
+@use '../../../styles/colors' as *;
+
+.hero {
+  position: relative;
+  background-color: $color-olive;
+
+  &__inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  &__content {
+    padding-top: 8rem;
+  }
+}
