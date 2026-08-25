@@ -8,12 +8,18 @@
 
   &__inner {
     max-width: 90rem;
+    height: 100%;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: stretch;
     gap: 2rem;
     padding-inline: 2rem;
+
+    @media (max-width: 22.5rem) {
+      padding-inline: 1rem;
+      gap: 1rem;
+    }
   }
 
   &__content {
@@ -53,6 +59,12 @@
       font-size: 1.75rem;
       padding-top: 4rem;
     }
+
+    @media (max-width: 30rem) and (orientation: portrait) {
+      font-size: clamp(1.3rem, 0.7rem + 3vw, 1.6rem);
+
+      padding-top: 2rem;
+    }
   }
 
   &__title {
@@ -74,6 +86,10 @@
 
     @media (max-width: 70.8125rem) and (orientation: landscape) {
       font-size: 4.5rem;
+    }
+
+    @media (max-width: 30rem) and (orientation: portrait) {
+      font-size: clamp(2.75rem, 0.25rem + 12.5vw, 4rem);
     }
   }
 
@@ -103,6 +119,11 @@
 
     @media (max-width: 70.8125rem) and (orientation: landscape) {
       font-size: 1rem;
+    }
+
+    @media (max-width: 30rem) and (orientation: portrait) {
+      font-size: clamp(0.85rem, 0.55rem + 1.5vw, 1rem);
+      padding: clamp(0.6rem, 0.1rem + 2.5vw, 0.85rem) clamp(1rem, 0.5rem + 2.5vw, 1.25rem);
     }
   }
 
@@ -134,6 +155,15 @@
       padding-bottom: 13rem;
     }
 
+    @media (max-width: 30rem) and (orientation: portrait) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+      white-space: normal;
+      padding-bottom: 8rem;
+      font-size: 2.5rem;
+    }
+
     &-link {
       font-size: 1.25rem;
       font-weight: 500;
@@ -147,6 +177,12 @@
 
       @media (max-width: 74.625rem) and (orientation: landscape) {
         font-size: 1rem;
+      }
+
+      @media (max-width: 30rem) and (orientation: portrait) {
+        font-size: clamp(0.9rem, -0.3rem + 6vw, 1.5rem);
+        padding: 0;
+        padding-top: clamp(0.5rem, 2.5vw, 0.75rem);
       }
 
       &:hover {
@@ -168,7 +204,8 @@
       display: none;
     }
 
-    @media (min-width: 90.0625rem), (orientation: portrait) {
+    @media (min-width: 90.0625rem) and (min-aspect-ratio: 2/1),
+      (orientation: portrait) and (min-width: 30rem) {
       img:nth-child(4),
       img:nth-child(5) {
         display: block;
@@ -176,11 +213,19 @@
     }
 
     img {
-      --img-width: clamp(22.5rem, 0.4rem + 34.5vw, 31.5rem);
+      --img-width: clamp(22.5rem, 46vh, 31.5rem);
       width: var(--img-width);
+
+      @media (min-width: 90.0625rem) and (min-aspect-ratio: 2/1) {
+        --img-width: clamp(22.5rem, 33vh, 31.5rem);
+      }
 
       @media (orientation: portrait) {
         --img-width: clamp(20rem, 32.75vh, 31.5rem);
+      }
+
+      @media (max-width: 30rem) and (orientation: portrait) {
+        --img-width: clamp(15rem, 46vh, 31.5rem);
       }
 
       &:not(:first-child) {
@@ -189,24 +234,35 @@
     }
   }
 
-  &__imprint {
+  &__legal {
+    display: flex;
+    gap: 1rem;
     position: absolute;
     bottom: 1rem;
     left: 40%;
     transform: translateX(-50%);
     color: $color-cream;
     font-size: 1rem;
-    text-decoration: none;
     font-family: 'Ubuntu';
-    padding: 0.75rem;
+
+    &-link {
+      text-decoration: none;
+      color: $color-cream;
+      padding: 0.5rem;
+
+      @media (max-width: 30rem) and (orientation: portrait) {
+        font-size: clamp(0.7rem, 0.35rem + 1.75vw, 0.875rem);
+        white-space: nowrap;
+      }
+
+      &:hover {
+        background-color: $color-olive-footer;
+      }
+    }
 
     @media (max-width: 74.625rem) and (orientation: landscape) {
       font-size: 0.875rem;
       bottom: 2rem;
-    }
-
-    &:hover {
-      background-color: $color-olive-footer;
     }
   }
 }
