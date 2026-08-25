@@ -1,1 +1,8 @@
 <img src="images/img/logo-light.png" alt="Code à Cuisine" />
+
+@if (!isHomePage()) {
+  <a routerLink="/" class="header__back">
+    <span class="header__back-icon"></span>
+    <span class="header__back-text">Home</span>
+  </a>
+}
