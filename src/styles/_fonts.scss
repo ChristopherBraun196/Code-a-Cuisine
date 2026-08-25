@@ -12,7 +12,7 @@ $ubuntu-weights: (
 @each $weight, $style, $file in $ubuntu-weights {
   @font-face {
     font-family: 'Ubuntu';
-    src: url('/fonts/Ubuntu/#{$file}.ttf') format('truetype');
+    src: url('../../public/fonts/Ubuntu/#{$file}.ttf') format('truetype');
     font-weight: $weight;
     font-style: $style;
   }
@@ -29,7 +29,7 @@ $quicksand-weights: (
 @each $weight, $file in $quicksand-weights {
   @font-face {
     font-family: 'Quicksand';
-    src: url('/fonts/Quicksand/static/#{$file}.ttf') format('truetype');
+    src: url('../../public/fonts/Quicksand/static/#{$file}.ttf') format('truetype');
 
     font-weight: $weight;
   }
