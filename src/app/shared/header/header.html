@@ -1,4 +1,7 @@
-<img src="images/img/logo-light.png" alt="Code à Cuisine" />
+<img
+  [src]="isLightPage() ? 'images/img/logo.png' : 'images/img/logo-light.png'"
+  alt="Code à Cuisine"
+/>
 
 @if (!isHomePage()) {
   <a routerLink="/" class="header__back">

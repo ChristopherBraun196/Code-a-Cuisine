@@ -49,3 +49,13 @@
     background-color: $color-olive-footer;
   }
 }
+
+:host(.header--light) {
+  .header__back {
+    color: $color-green-mid;
+  }
+
+  .header__back:hover {
+    background-color: $color-olive-highlight;
+  }
+}

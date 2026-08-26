@@ -8,7 +8,11 @@ import { filter, map, startWith } from 'rxjs';
   selector: 'app-header',
   styleUrl: './header.scss',
   templateUrl: './header.html',
+  host: {
+    '[class.header--light]': 'isLightPage()',
+  },
 })
+
 export class Header {
   private router = inject(Router);
 
@@ -21,4 +25,5 @@ export class Header {
   );
 
   isHomePage = computed(() => this.currentUrl() === '/');
+  isLightPage = computed(() => this.currentUrl() === '/generate');
 }

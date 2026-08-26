@@ -1,1 +1,30 @@
-<p>generator works!</p>
+<section class="generate">
+  <div class="generate__heading">
+    <h1>Generate recipe</h1>
+    <p>Got random stuff in your kitchen? Pop it in—we’ve got the perfect recipe waiting.</p>
+  </div>
+  <div class="generate__form">
+    <div class="generate__ingredient">
+      <label for="ingredientName">Ingredient</label>
+      <input type="text" id="ingredientName" [(ngModel)]="newName" />
+
+      <label for="servingSize">Serving size</label>
+      <input type="number" id="servingSize" [(ngModel)]="newAmount" />
+
+      <select [(ngModel)]="newUnit">
+        <option value="gram">gram</option>
+        <option value="stück">stück</option>
+        <option value="liter">liter</option>
+      </select>
+      <button type="button" (click)="addIngredient()">+</button>
+    </div>
+    <div class="generate__ingredient-list">
+      <h2>List of your Ingredients</h2>
+
+      @for (ingredient of ingredients(); track $index) {
+        <p>{{ ingredient.amount }} {{ ingredient.unit }} {{ ingredient.name }}</p>
+        <button type="button" (click)="removeIngredient($index)">delete</button>
+      }
+    </div>
+  </div>
+</section>
