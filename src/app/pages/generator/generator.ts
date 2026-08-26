@@ -10,12 +10,29 @@ import { RouterLink } from '@angular/router';
 })
 export class Generator {
   ingredients = signal<Ingredient[]>([]);
+  showNameError = signal(false);
+  showAmountError = signal(false);
 
   newName = '';
   newAmount = 100;
   newUnit: Ingredient['unit'] = 'gram';
 
+  isUnitOpen = signal(false);
+
+  selectUnit(unit: Ingredient['unit']): void {
+    this.newUnit = unit;
+    this.isUnitOpen.set(false);
+  }
+
   addIngredient(): void {
+    if (!this.newName.trim() || !this.newAmount || !this.newUnit) {
+      this.showNameError.set(true);
+      return;
+    }
+
+    this.showNameError.set(false);
+    this.showAmountError.set(false);
+
     this.ingredients.update((list) => [
       ...list,
       { name: this.newName, amount: this.newAmount, unit: this.newUnit },
@@ -28,10 +45,36 @@ export class Generator {
   removeIngredient(index: number): void {
     this.ingredients.update((list) => list.filter((_, i) => i !== index));
   }
+
+  editingIndex = signal<number | null>(null);
+  editAmount = 0;
+  editUnit: Ingredient['unit'] = 'gram';
+  isEditUnitOpen = signal(false);
+
+  selectEditUnit(unit: Ingredient['unit']): void {
+    this.editUnit = unit;
+    this.isEditUnitOpen.set(false);
+  }
+
+  startEdit(index: number): void {
+    const ingredient = this.ingredients()[index];
+    this.editAmount = ingredient.amount;
+    this.editUnit = ingredient.unit;
+    this.editingIndex.set(index);
+  }
+
+  saveEdit(index: number): void {
+    this.ingredients.update((list) =>
+      list.map((item, i) =>
+        i === index ? { ...item, amount: this.editAmount, unit: this.editUnit } : item,
+      ),
+    );
+    this.editingIndex.set(null);
+  }
 }
 
 interface Ingredient {
   name: string;
   amount: number;
-  unit: 'gram' | 'stück' | 'liter';
+  unit: 'gram' | 'piece' | 'ml';
 }

@@ -1,5 +1,334 @@
+@use '../../../styles/colors' as *;
 @use '../../../styles/layout' as *;
 
 .generate {
+  background-color: white;
   padding-top: $header-clearance;
+  padding-inline: 2rem;
+  padding-bottom: 4rem;
+  text-align: center;
+
+  &__heading {
+    h1 {
+      color: $color-green-mid;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 600;
+      font-size: 3.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: $color-green-dark;
+      font-weight: 500;
+      font-size: 1.5rem;
+    }
+  }
+
+  &__form {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  &__ingredient {
+    display: flex;
+    gap: 2rem;
+    background-color: $color-olive-highlight;
+    color: $color-green-dark;
+    border-radius: 1.5625rem;
+    padding: 1.5rem;
+    width: 36rem;
+    height: 10rem;
+    text-align: left;
+  }
+
+  &__ingredient-list {
+    background-color: $color-olive-highlight;
+    color: $color-green-dark;
+    border-radius: 1.25rem;
+    padding: 1rem;
+    width: 30rem;
+    min-height: 14.375rem;
+    text-align: left;
+
+    h2 {
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 500;
+      font-size: 1.25rem;
+    }
+
+    .generate__list-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      padding: 0.25rem;
+      border-radius: 0.75rem;
+      font-size: 1.15rem;
+
+      &:hover {
+        background-color: $color-cream-highlight;
+      }
+
+      &.generate__list-item--editing {
+        align-items: flex-start;
+      }
+
+      &.generate__list-item--editing:hover {
+        background-color: transparent;
+      }
+    }
+
+    .generate__list-amount {
+      width: 3rem;
+    }
+
+    .generate__list-name {
+      flex: 1;
+    }
+
+    .generate__list-edit-amount,
+    .generate__list-edit-unit {
+      background-color: $color-cream-highlight;
+      color: $color-green-dark;
+      border: none;
+      border-radius: 1.25rem;
+      padding: 0.5rem;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1rem;
+    }
+
+    .generate__list-edit-amount {
+      width: 3rem;
+      text-align: center;
+      outline: none;
+      appearance: textfield;
+      -moz-appearance: textfield;
+
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    }
+
+    .generate__list-edit-unit {
+      width: 5.25rem;
+    }
+
+    button {
+      background: none;
+      border: none;
+      padding: 0;
+      color: $color-green-dark;
+      font-family: 'Quicksand', sans-serif;
+      cursor: pointer;
+    }
+
+    .generate__icon-button {
+      border-radius: 0.375rem;
+      padding: 0.25rem;
+
+      img {
+        width: 0.825rem;
+        height: auto;
+      }
+
+      &:hover {
+        background-color: $color-olive-highlight;
+      }
+
+      &:last-child {
+        margin-left: 1rem;
+      }
+    }
+
+    .generate__edit-unit-dropdown {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .generate__edit-unit-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background-color: $color-cream-highlight;
+      color: $color-green-dark;
+      font-family: 'Quicksand', sans-serif;
+      border: none;
+      border-radius: 1.25rem;
+      padding: 0.5rem 0.75rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+      width: 5.25rem;
+    }
+
+    .generate__edit-unit-arrow {
+      width: 0.4rem;
+      height: 0.4rem;
+      border-right: 0.125rem solid $color-green-dark;
+      border-bottom: 0.125rem solid $color-green-dark;
+      transform: rotate(45deg);
+      transition: transform 0.15s ease;
+
+      &--open {
+        transform: rotate(-135deg);
+      }
+    }
+
+    .generate__edit-unit-list {
+      margin-top: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      button {
+        background: none;
+        border: none;
+        padding: 0;
+        color: $color-green-dark;
+        font-family: 'Quicksand', sans-serif;
+        font-size: 1rem;
+        text-align: left;
+        cursor: pointer;
+      }
+    }
+  }
+
+  &__unit-dropdown {
+    position: relative;
+  }
+
+  &__unit-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: $color-cream-highlight;
+    color: $color-green-dark;
+    font-family: 'Quicksand', sans-serif;
+    border: none;
+    border-radius: 1.25rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    width: 5.25rem;
+  }
+
+  &__unit-arrow {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-right: 0.125rem solid $color-green-dark;
+    border-bottom: 0.125rem solid $color-green-dark;
+    transform: rotate(45deg);
+    transition: transform 0.15s ease;
+
+    &--open {
+      transform: rotate(-135deg);
+    }
+  }
+
+  &__unit-list {
+    position: absolute;
+    top: 100%;
+    left: 1rem;
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 10;
+
+    button {
+      background: none;
+      border: none;
+      padding: 0;
+      color: $color-green-dark;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1rem;
+      text-align: left;
+      cursor: pointer;
+    }
+  }
+
+  &__ingredient {
+    label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-size: 1.25rem;
+    }
+
+    &-name,
+    &-amount {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &-amount-row {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      margin-top: 1rem;
+    }
+
+    input {
+      background-color: $color-cream-highlight;
+      border: 0.125rem solid transparent;
+      border-radius: 1.25rem;
+      padding: 0.5rem;
+
+      height: 1.5rem;
+    }
+
+    #ingredientName {
+      width: 18.75rem;
+      margin-top: 1rem;
+    }
+    .generate__input--error {
+      border-color: #d32f2f;
+    }
+
+    .generate__error {
+      color: #d32f2f;
+      font-size: 0.875rem;
+      margin: 0.25rem 0 0;
+      visibility: hidden;
+
+      &--visible {
+        visibility: visible;
+      }
+    }
+
+    #servingSize {
+      width: 3rem;
+      font-size: 1.25rem;
+      text-align: center;
+      appearance: textfield;
+      -moz-appearance: textfield;
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    }
+  }
+
+  &__add-button {
+    display: flex;
+    align-self: center;
+
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 0.5rem;
+
+    &:hover {
+      background-color: $color-cream-highlight;
+    }
+
+    img {
+      display: block;
+    }
+  }
 }

@@ -1,29 +1,122 @@
 <section class="generate">
   <div class="generate__heading">
     <h1>Generate recipe</h1>
-    <p>Got random stuff in your kitchen? Pop it in—we’ve got the perfect recipe waiting.</p>
+    <p>Got random stuff in your kitchen? Pop it in—we've got the perfect recipe waiting.</p>
   </div>
   <div class="generate__form">
     <div class="generate__ingredient">
-      <label for="ingredientName">Ingredient</label>
-      <input type="text" id="ingredientName" [(ngModel)]="newName" />
+      <div class="generate__ingredient-name">
+        <label for="ingredientName">Ingredient</label>
 
-      <label for="servingSize">Serving size</label>
-      <input type="number" id="servingSize" [(ngModel)]="newAmount" />
+        <input
+          type="text"
+          id="ingredientName"
+          [ngModel]="newName"
+          (ngModelChange)="newName = $event; showNameError.set(false)"
+          (blur)="showNameError.set(!newName.trim())"
+          [class.generate__input--error]="showNameError()"
+        />
+        <p class="generate__error" [class.generate__error--visible]="showNameError()">
+          Please enter an ingredient
+        </p>
+      </div>
 
-      <select [(ngModel)]="newUnit">
-        <option value="gram">gram</option>
-        <option value="stück">stück</option>
-        <option value="liter">liter</option>
-      </select>
-      <button type="button" (click)="addIngredient()">+</button>
+      <div class="generate__ingredient-amount">
+        <label for="servingSize">Serving size</label>
+        <div class="generate__ingredient-amount-row">
+          <input
+            type="number"
+            id="servingSize"
+            [ngModel]="newAmount"
+            (ngModelChange)="newAmount = $event; showAmountError.set(false)"
+            (blur)="showAmountError.set(!newAmount)"
+            [class.generate__input--error]="showAmountError()"
+          />
+
+          <div class="generate__unit-dropdown">
+            <button
+              type="button"
+              class="generate__unit-toggle"
+              (click)="isUnitOpen.set(!isUnitOpen())"
+            >
+              {{ newUnit }}
+              <span
+                class="generate__unit-arrow"
+                [class.generate__unit-arrow--open]="isUnitOpen()"
+              ></span>
+            </button>
+
+            @if (isUnitOpen()) {
+              <div class="generate__unit-list">
+                <button type="button" (click)="selectUnit('gram')">gram</button>
+                <button type="button" (click)="selectUnit('piece')">piece</button>
+                <button type="button" (click)="selectUnit('ml')">ml</button>
+              </div>
+            }
+          </div>
+
+          <button type="button" class="generate__add-button" (click)="addIngredient()">
+            <img src="images/icons/add_2.svg" alt="" />
+          </button>
+        </div>
+      </div>
     </div>
+
     <div class="generate__ingredient-list">
       <h2>List of your Ingredients</h2>
 
       @for (ingredient of ingredients(); track $index) {
-        <p>{{ ingredient.amount }} {{ ingredient.unit }} {{ ingredient.name }}</p>
-        <button type="button" (click)="removeIngredient($index)">delete</button>
+        <div
+          class="generate__list-item"
+          [class.generate__list-item--editing]="editingIndex() === $index"
+        >
+          <span class="generate__list-bullet">•</span>
+
+          @if (editingIndex() === $index) {
+            <input type="number" [(ngModel)]="editAmount" class="generate__list-edit-amount" />
+            <div class="generate__edit-unit-dropdown">
+              <button
+                type="button"
+                class="generate__edit-unit-toggle"
+                (click)="isEditUnitOpen.set(!isEditUnitOpen())"
+              >
+                {{ editUnit }}
+                <span
+                  class="generate__edit-unit-arrow"
+                  [class.generate__edit-unit-arrow--open]="isEditUnitOpen()"
+                ></span>
+              </button>
+
+              @if (isEditUnitOpen()) {
+                <div class="generate__edit-unit-list">
+                  <button type="button" (click)="selectEditUnit('gram')">gram</button>
+                  <button type="button" (click)="selectEditUnit('piece')">piece</button>
+                  <button type="button" (click)="selectEditUnit('ml')">ml</button>
+                </div>
+              }
+            </div>
+          } @else {
+            <span class="generate__list-amount">
+              {{ ingredient.amount
+              }}{{ ingredient.unit === 'gram' ? 'g' : ingredient.unit === 'ml' ? 'ml' : 'pc' }}
+            </span>
+          }
+
+          <span class="generate__list-name">{{ ingredient.name }}</span>
+
+          @if (editingIndex() === $index) {
+            <button type="button" class="generate__icon-button" (click)="saveEdit($index)">
+              <img src="images/icons/check.svg" alt="Save" />
+            </button>
+          } @else {
+            <button type="button" class="generate__icon-button" (click)="startEdit($index)">
+              <img src="images/icons/border_color.svg" alt="Edit" />
+            </button>
+          }
+          <button type="button" class="generate__icon-button" (click)="removeIngredient($index)">
+            <img src="images/icons/delete.svg" alt="Delete" />
+          </button>
+        </div>
       }
     </div>
   </div>
