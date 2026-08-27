@@ -4,7 +4,7 @@
 />
 
 @if (!isHomePage()) {
-  <a routerLink="/" class="header__back">
+  <a [routerLink]="backTarget()" class="header__back">
     <svg
       class="header__back-icon"
       viewBox="0 0 22 15"
@@ -17,6 +17,6 @@
         fill="currentColor"
       />
     </svg>
-    <span class="header__back-text">Home</span>
+    <span class="header__back-text">{{ backLabel() }}</span>
   </a>
 }

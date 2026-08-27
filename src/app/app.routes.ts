@@ -6,6 +6,8 @@ import { RecipeDetail } from './pages/recipe-detail/recipe-detail';
 import { Imprint } from './pages/imprint/imprint';
 import { PrivacyPolicy } from './pages/privacy-policy/privacy-policy';
 import { Preferences } from './pages/preferences/preferences';
+import { Generating } from './pages/generating/generating';
+import { Results } from './pages/results/results';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -15,4 +17,6 @@ export const routes: Routes = [
   { path: 'imprint', component: Imprint },
   { path: 'privacy-policy', component: PrivacyPolicy },
   { path: 'preferences', component: Preferences },
+  { path: 'generating', component: Generating },
+  { path: 'results', component: Results },
 ];

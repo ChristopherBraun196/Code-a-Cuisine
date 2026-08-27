@@ -1,10 +1,9 @@
 import { Component, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink} from '@angular/router';
 import { Router } from '@angular/router';
 
 @Component({
-  imports: [RouterLink, FormsModule],
+  imports: [FormsModule],
   selector: 'app-generator',
   styleUrl: './generator.scss',
   templateUrl: './generator.html',

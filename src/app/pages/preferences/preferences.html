@@ -1,1 +1,180 @@
-<p>preferences works!</p>
+<section class="preferences">
+  <div class="preferences__heading">
+    <h1>Choose your preferences</h1>
+  </div>
+
+  <div class="preferences__counters">
+    <div class="preferences__counter">
+      <label>How many portions you need?</label>
+      <div class="preferences__counter-row">
+        <button type="button" (click)="decrementPortions()">
+          <img src="images/icons/min_border.svg" alt="" />
+        </button>
+        <input
+          type="number"
+          class="preferences__counter-input"
+          [ngModel]="portions()"
+          (ngModelChange)="setPortions($event)"
+        />
+        <span class="preferences__counter-label">Portions</span>
+        <button type="button" (click)="incrementPortions()">
+          <img src="images/icons/plus_border.svg" alt="" />
+        </button>
+      </div>
+    </div>
+
+    <div class="preferences__counter">
+      <label>How many are cooking?</label>
+      <div class="preferences__counter-row">
+        <button type="button" (click)="decrementHelpers()">
+          <img src="images/icons/min_border.svg" alt="" />
+        </button>
+        <input
+          type="number"
+          class="preferences__counter-input"
+          [ngModel]="helpers()"
+          (ngModelChange)="setHelpers($event)"
+        />
+        <span class="preferences__counter-label">Person</span>
+        <button type="button" (click)="incrementHelpers()">
+          <img src="images/icons/plus_border.svg" alt="" />
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="preferences__card">
+    <div class="preferences__group">
+      <h2><img src="images/icons/schedule.svg" alt="" />Cooking time:</h2>
+      <div class="preferences__options">
+        <div class="preferences__option-wrapper">
+          <button
+            type="button"
+            class="preferences__option"
+            [class.preferences__option--active]="cookingTime() === 'quick'"
+            (click)="selectCookingTime('quick')"
+          >
+            Quick
+          </button>
+          <span class="preferences__option-hint">up to 20min</span>
+        </div>
+        <div class="preferences__option-wrapper">
+          <button
+            type="button"
+            class="preferences__option"
+            [class.preferences__option--active]="cookingTime() === 'medium'"
+            (click)="selectCookingTime('medium')"
+          >
+            Medium
+          </button>
+          <span class="preferences__option-hint">25-40min</span>
+        </div>
+        <div class="preferences__option-wrapper">
+          <button
+            type="button"
+            class="preferences__option"
+            [class.preferences__option--active]="cookingTime() === 'complex'"
+            (click)="selectCookingTime('complex')"
+          >
+            Complex
+          </button>
+          <span class="preferences__option-hint">over 45min</span>
+        </div>
+      </div>
+    </div>
+    <div class="preferences__group">
+      <h2><img src="images/icons/public.png" alt="" />Cuisine</h2>
+      <div class="preferences__options">
+        <button
+          type="button"
+          class="preferences__option"
+          [class.preferences__option--active]="cuisine() === 'german'"
+          (click)="selectCuisine('german')"
+        >
+          German
+        </button>
+        <button
+          type="button"
+          class="preferences__option"
+          [class.preferences__option--active]="cuisine() === 'italian'"
+          (click)="selectCuisine('italian')"
+        >
+          Italian
+        </button>
+        <button
+          type="button"
+          class="preferences__option"
+          [class.preferences__option--active]="cuisine() === 'indian'"
+          (click)="selectCuisine('indian')"
+        >
+          Indian
+        </button>
+        <button
+          type="button"
+          class="preferences__option"
+          [class.preferences__option--active]="cuisine() === 'japanese'"
+          (click)="selectCuisine('japanese')"
+        >
+          Japanese
+        </button>
+        <button
+          type="button"
+          class="preferences__option"
+          [class.preferences__option--active]="cuisine() === 'gourmet'"
+          (click)="selectCuisine('gourmet')"
+        >
+          Gourmet
+        </button>
+        <button
+          type="button"
+          class="preferences__option"
+          [class.preferences__option--active]="cuisine() === 'fusion'"
+          (click)="selectCuisine('fusion')"
+        >
+          Fusion
+        </button>
+      </div>
+    </div>
+
+    <div class="preferences__group">
+      <h2><img src="images/icons/fork_spoon.png" alt="" />Diet preferences</h2>
+      <div class="preferences__options">
+        <button
+          type="button"
+          class="preferences__option"
+          [class.preferences__option--active]="diet() === 'vegetarian'"
+          (click)="selectDiet('vegetarian')"
+        >
+          Vegetarian
+        </button>
+        <button
+          type="button"
+          class="preferences__option"
+          [class.preferences__option--active]="diet() === 'vegan'"
+          (click)="selectDiet('vegan')"
+        >
+          Vegan
+        </button>
+        <button
+          type="button"
+          class="preferences__option"
+          [class.preferences__option--active]="diet() === 'keto'"
+          (click)="selectDiet('keto')"
+        >
+          Keto
+        </button>
+        <button
+          type="button"
+          class="preferences__option"
+          [class.preferences__option--active]="diet() === 'none'"
+          (click)="selectDiet('none')"
+        >
+          No preferences
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="preferences__generate-button" (click)="generateRecipe()">
+    Generate a recipe
+  </button>
+</section>

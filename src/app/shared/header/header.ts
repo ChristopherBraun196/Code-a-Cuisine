@@ -12,7 +12,6 @@ import { filter, map, startWith } from 'rxjs';
     '[class.header--light]': 'isLightPage()',
   },
 })
-
 export class Header {
   private router = inject(Router);
 
@@ -24,6 +23,17 @@ export class Header {
     ),
   );
 
-  isHomePage = computed(() => this.currentUrl() === '/');
-  isLightPage = computed(() => this.currentUrl() === '/generate');
+  isHomePage = computed(
+    () =>
+      this.currentUrl() === '/' ||
+      this.currentUrl() === '/generating' ||
+      this.currentUrl() === '/results',
+  );
+
+  isLightPage = computed(
+    () => this.currentUrl() === '/generate' || this.currentUrl() === '/preferences',
+  );
+
+  backTarget = computed(() => (this.currentUrl() === '/preferences' ? '/generate' : '/'));
+  backLabel = computed(() => (this.currentUrl() === '/preferences' ? 'Ingredients' : 'Home'));
 }

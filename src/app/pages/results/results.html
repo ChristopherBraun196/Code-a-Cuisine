@@ -1,0 +1,42 @@
+<section class="results">
+  <div class="results__intro">
+    <h1 class="results__heading">
+      <span class="results__heading-desktop">The recipe results</span>
+      <span class="results__heading-mobile">Generated recipes</span>
+    </h1>
+    <img src="images/img/robo.png" alt="" class="results__hero" />
+    <div class="results__text">
+      <p>
+        We took what you have and let our AI do the thinking. Here are 3 easy recipes you can make
+        right now!
+      </p>
+      <div class="results__tags">
+        <span class="results__tag">{{ cuisine }}</span>
+        <span class="results__tag">{{ cookingTime }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="results__cards">
+    @for (recipe of recipes; track recipe.id) {
+      <article class="results__card">
+        <p class="results__card-label">
+          <img src="images/icons/cloche.svg" alt="" />
+          Recipe {{ $index + 1 }}
+        </p>
+        <h3 class="results__card-title">{{ recipe.name }}</h3>
+        <p class="results__card-time">
+          <img src="images/icons/schedule.svg" alt="" />
+          Cooking time: {{ recipe.cookingTime }}min
+        </p>
+        <a [routerLink]="['/recipe', recipe.id]" class="results__card-button">View</a>
+      </article>
+    }
+  </div>
+  <div class="results__footer">
+    <a routerLink="/preferences" class="results__regenerate">
+      Generate new recipie
+      <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</section>
