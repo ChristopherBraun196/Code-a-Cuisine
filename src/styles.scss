@@ -1,5 +1,5 @@
 @use 'styles/fonts';
-@use 'styles/colors' as*;
+@use 'styles/colors' as *;
 
 h1,
 h2,
@@ -8,6 +8,12 @@ h4,
 h5,
 h6 {
   font-family: 'Ubuntu', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {

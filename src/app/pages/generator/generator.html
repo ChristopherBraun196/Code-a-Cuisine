@@ -69,6 +69,7 @@
         <div
           class="generate__list-item"
           [class.generate__list-item--editing]="editingIndex() === $index"
+          [class.generate__list-item--dropdown-open]="editingIndex() === $index && isEditUnitOpen()"
         >
           <span class="generate__list-bullet">•</span>
 
@@ -87,18 +88,19 @@
                 ></span>
               </button>
 
-              @if (isEditUnitOpen()) {
-                <div class="generate__edit-unit-list">
-                  <button type="button" (click)="selectEditUnit('gram')">gram</button>
-                  <button type="button" (click)="selectEditUnit('piece')">piece</button>
-                  <button type="button" (click)="selectEditUnit('ml')">ml</button>
-                </div>
-              }
+              <div
+                class="generate__edit-unit-list"
+                [class.generate__edit-unit-list--open]="isEditUnitOpen()"
+              >
+                <button type="button" (click)="selectEditUnit('gram')">gram</button>
+                <button type="button" (click)="selectEditUnit('piece')">piece</button>
+                <button type="button" (click)="selectEditUnit('ml')">ml</button>
+              </div>
             </div>
           } @else {
             <span class="generate__list-amount">
               {{ ingredient.amount
-              }}{{ ingredient.unit === 'gram' ? 'g' : ingredient.unit === 'ml' ? 'ml' : 'pc' }}
+              }}{{ ingredient.unit === 'gram' ? 'g' : ingredient.unit === 'ml' ? 'ml' : '' }}
             </span>
           }
 
@@ -118,6 +120,15 @@
           </button>
         </div>
       }
+    </div>
+
+    <div class="generate__form-footer">
+      <button type="button" class="generate__next-button" (click)="goToNextStep()">
+        Next step
+      </button>
+      <p class="generate__error" [class.generate__error--visible]="showNoIngredientsError()">
+        Please 1 ingredient
+      </p>
     </div>
   </div>
 </section>

@@ -5,6 +5,7 @@ import { RecipeLibrary } from './pages/recipe-library/recipe-library';
 import { RecipeDetail } from './pages/recipe-detail/recipe-detail';
 import { Imprint } from './pages/imprint/imprint';
 import { PrivacyPolicy } from './pages/privacy-policy/privacy-policy';
+import { Preferences } from './pages/preferences/preferences';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -12,6 +13,6 @@ export const routes: Routes = [
   { path: 'cookbook', component: RecipeLibrary },
   { path: 'recipe/:id', component: RecipeDetail },
   { path: 'imprint', component: Imprint },
-  { path: 'privacy-policy', component: PrivacyPolicy }
-
+  { path: 'privacy-policy', component: PrivacyPolicy },
+  { path: 'preferences', component: Preferences },
 ];

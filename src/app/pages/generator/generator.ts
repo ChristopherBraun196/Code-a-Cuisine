@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink} from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   imports: [RouterLink, FormsModule],
@@ -9,13 +10,21 @@ import { RouterLink } from '@angular/router';
   templateUrl: './generator.html',
 })
 export class Generator {
+  private router = inject(Router);
+
   ingredients = signal<Ingredient[]>([]);
   showNameError = signal(false);
   showAmountError = signal(false);
+  showNoIngredientsError = signal(false);
 
   newName = '';
   newAmount = 100;
   newUnit: Ingredient['unit'] = 'gram';
+
+  editingIndex = signal<number | null>(null);
+  editAmount = 0;
+  editUnit: Ingredient['unit'] = 'gram';
+  isEditUnitOpen = signal(false);
 
   isUnitOpen = signal(false);
 
@@ -46,10 +55,14 @@ export class Generator {
     this.ingredients.update((list) => list.filter((_, i) => i !== index));
   }
 
-  editingIndex = signal<number | null>(null);
-  editAmount = 0;
-  editUnit: Ingredient['unit'] = 'gram';
-  isEditUnitOpen = signal(false);
+  goToNextStep(): void {
+    if (this.ingredients().length === 0) {
+      this.showNoIngredientsError.set(true);
+      return;
+    }
+    this.showNoIngredientsError.set(false);
+    this.router.navigate(['/preferences']);
+  }
 
   selectEditUnit(unit: Ingredient['unit']): void {
     this.editUnit = unit;
