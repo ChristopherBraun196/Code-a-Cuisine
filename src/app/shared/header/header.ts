@@ -21,6 +21,7 @@ export class Header {
       map(() => this.router.url),
       startWith(this.router.url),
     ),
+    { initialValue: this.router.url },
   );
 
   isHomePage = computed(
@@ -31,9 +32,22 @@ export class Header {
   );
 
   isLightPage = computed(
-    () => this.currentUrl() === '/generate' || this.currentUrl() === '/preferences',
+    () =>
+      this.currentUrl() === '/generate' ||
+      this.currentUrl() === '/preferences' ||
+      this.currentUrl().startsWith('/recipe/') ||
+      this.currentUrl() === '/cookbook',
   );
 
-  backTarget = computed(() => (this.currentUrl() === '/preferences' ? '/generate' : '/'));
-  backLabel = computed(() => (this.currentUrl() === '/preferences' ? 'Ingredients' : 'Home'));
+  backTarget = computed(() => {
+    if (this.currentUrl() === '/preferences') return '/generate';
+    if (this.currentUrl().startsWith('/recipe/')) return '/results';
+    return '/';
+  });
+
+  backLabel = computed(() => {
+    if (this.currentUrl() === '/preferences') return 'Ingredients';
+    if (this.currentUrl().startsWith('/recipe/')) return 'Recipe results';
+    return 'Home';
+  });
 }

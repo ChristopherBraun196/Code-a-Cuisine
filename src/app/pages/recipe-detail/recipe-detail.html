@@ -1,1 +1,171 @@
-<p>recipe-detail works!</p>
+<section class="recipe-detail">
+  <div class="recipe-detail__card">
+    <div class="recipe-detail__info">
+      <div class="recipe-detail__info-left">
+        <p class="recipe-detail__time">
+          <img src="images/icons/schedule.svg" alt="" />
+          Cooking time: {{ recipe.cookingTime }}min
+        </p>
+        <h1 class="recipe-detail__title">{{ recipe.name }}</h1>
+        <p class="recipe-detail__servings">
+          <span class="recipe-detail__servings-label">Cooking person: {{ recipe.servings }}</span>
+          <span class="recipe-detail__chef recipe-detail__chef--1"
+            ><img src="images/icons/chef_hat.svg" alt="" />Chef 1</span
+          >
+          <span class="recipe-detail__chef recipe-detail__chef--2"
+            ><img src="images/icons/cooking_spoon.svg" alt="" /> Chef 2</span
+          >
+        </p>
+      </div>
+
+      <div class="recipe-detail__info-right">
+        <div class="recipe-detail__tags">
+          @for (tag of recipe.tags; track tag) {
+            <span class="recipe-detail__tag">{{ tag }}</span>
+          }
+          <span class="recipe-detail__likes">
+            <img src="images/icons/heart.svg" alt="" /> {{ recipe.likes }}</span
+          >
+        </div>
+
+        <div class="recipe-detail__nutrition">
+          <p class="recipe-detail__nutrition-label">Nutritional information</p>
+          <div class="recipe-detail__nutrition-values">
+            <div class="recipe-detail__nutrition-item">
+              <span class="recipe-detail__nutrition-name">Energie</span>
+              <span class="recipe-detail__nutrition-value">{{ recipe.nutrition.energy }} kcal</span>
+            </div>
+            <div class="recipe-detail__nutrition-item">
+              <span class="recipe-detail__nutrition-name">Protein</span>
+              <span class="recipe-detail__nutrition-value">{{ recipe.nutrition.protein }}g</span>
+            </div>
+            <div class="recipe-detail__nutrition-item">
+              <span class="recipe-detail__nutrition-name">Fat</span>
+              <span class="recipe-detail__nutrition-value">{{ recipe.nutrition.fat }}g</span>
+            </div>
+            <div class="recipe-detail__nutrition-item">
+              <span class="recipe-detail__nutrition-name">Carbs</span>
+              <span class="recipe-detail__nutrition-value">{{ recipe.nutrition.carbs }}g</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="recipe-detail__banner recipe-detail__banner--ingredients">
+      <img
+        src="images/img/Hero for silgle recipe view-2.png"
+        alt="Ingredients"
+        class="recipe-detail__banner-image recipe-detail__banner-image--desktop"
+      />
+      <img
+        src="images/img/Property 1=Ingredients Mob..png"
+        alt="Ingredients"
+        class="recipe-detail__banner-image recipe-detail__banner-image--mobile"
+      />
+    </div>
+
+    <div
+      class="recipe-detail__ingredients"
+      [class.recipe-detail__ingredients--collapsed]="!ingredientsExpanded()"
+    >
+      <div class="recipe-detail__ingredient-column">
+        <h3>Your ingredients</h3>
+        <ul>
+          @for (ingredient of recipe.yourIngredients; track ingredient.name) {
+            <li>
+              @if (ingredient.amount) {
+                <span class="recipe-detail__ingredient-amount">{{ ingredient.amount }}</span>
+              }
+              <span class="recipe-detail__ingredient-name">{{ ingredient.name }}</span>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <div class="recipe-detail__ingredient-column">
+        <h3>Extra ingredients</h3>
+        <ul>
+          @for (ingredient of recipe.extraIngredients; track ingredient.name) {
+            <li>
+              @if (ingredient.amount) {
+                <span class="recipe-detail__ingredient-amount">{{ ingredient.amount }}</span>
+              }
+              <span class="recipe-detail__ingredient-name">{{ ingredient.name }}</span>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+    <button type="button" class="recipe-detail__toggle" (click)="toggleIngredients()">
+      {{ ingredientsExpanded() ? 'Hide ingredients' : 'Show ingredients' }}
+      <span aria-hidden="true">{{ ingredientsExpanded() ? '▲' : '▼' }}</span>
+    </button>
+
+    <div class="recipe-detail__banner recipe-detail__banner--directions">
+      <img
+        src="images/img/Hero for silgle recipe view.png"
+        alt="Directions"
+        class="recipe-detail__banner-image recipe-detail__banner-image--desktop"
+      />
+      <img
+        src="images/img/Property 1=Directions Mob..png"
+        alt="Directions"
+        class="recipe-detail__banner-image recipe-detail__banner-image--mobile"
+      />
+    </div>
+
+    <div
+      class="recipe-detail__directions"
+      [class.recipe-detail__directions--collapsed]="!directionsExpanded()"
+    >
+      @for (direction of recipe.directions; track direction.step) {
+        <div class="recipe-detail__direction">
+          <p class="recipe-detail__direction-head">
+            <span class="recipe-detail__direction-step">{{ direction.step }}.</span>
+            <span class="recipe-detail__direction-title">{{ direction.title }}</span>
+            <span
+              class="recipe-detail__chef"
+              [class.recipe-detail__chef--1]="direction.chef === 1"
+              [class.recipe-detail__chef--2]="direction.chef === 2"
+            >
+              <img
+                [src]="
+                  direction.chef === 1
+                    ? 'images/icons/chef_hat.svg'
+                    : 'images/icons/cooking_spoon.svg'
+                "
+                alt=""
+              />
+              Chef {{ direction.chef }}
+            </span>
+          </p>
+          <p class="recipe-detail__direction-text">{{ direction.description }}</p>
+        </div>
+      }
+    </div>
+    <button type="button" class="recipe-detail__toggle" (click)="toggleDirections()">
+      {{ directionsExpanded() ? 'Hide directions' : 'Show directions' }}
+      <span aria-hidden="true">{{ directionsExpanded() ? '▲' : '▼' }}</span>
+    </button>
+
+    <div class="recipe-detail__like-hint">
+      <p class="recipe-detail__like-text">
+        <strong>Just finished this meal?</strong>
+        Give it a heart, so that the others know this is delicious.
+      </p>
+      <img src="images/icons/heart.svg" alt="" class="recipe-detail__like-icon" />
+    </div>
+  </div>
+  <div class="recipe-detail__cta">
+    <p>Find inspiration for your next culinary adventure!</p>
+    <a routerLink="/cookbook" class="recipe-detail__cta-button">Cookbook</a>
+  </div>
+
+  <div class="recipe-detail__regenerate-row">
+    <a routerLink="/preferences" class="recipe-detail__regenerate">
+      Generate new recipie
+      <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</section>

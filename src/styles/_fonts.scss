@@ -34,3 +34,16 @@ $quicksand-weights: (
     font-weight: $weight;
   }
 }
+
+$mulish-weights: (
+  (400, 'Mulish-Regular'),
+  (700, 'Mulish-Bold')
+);
+
+@each $weight, $file in $mulish-weights {
+  @font-face {
+    font-family: 'Mulish';
+    src: url('../../public/fonts/Mulish/static/#{$file}.ttf') format('truetype');
+    font-weight: $weight;
+  }
+}
