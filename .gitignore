@@ -52,3 +52,7 @@ Checklist
 
 # Private Dev-Tools (kein Teil der App)
 /tools
+
+# Firebase Admin SDK Service Account (Geheimnis, nie committen)
+*firebase-adminsdk*.json
+serviceAccountKey.json
