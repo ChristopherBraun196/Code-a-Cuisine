@@ -26,38 +26,49 @@ export class Header {
     { initialValue: this.router.url },
   );
 
+  private currentPath = computed(() => this.currentUrl().split('?')[0]);
+  private cameFromRecipe = computed(() => this.currentUrl().includes('from=recipe'));
+
   isHomePage = computed(
     () =>
-      this.currentUrl() === '/' ||
-      this.currentUrl() === '/generating' ||
-      this.currentUrl() === '/results',
+      this.currentPath() === '/' ||
+      this.currentPath() === '/generating' ||
+      this.currentPath() === '/results',
   );
 
   isLightPage = computed(
     () =>
-      this.currentUrl() === '/generate' ||
-      this.currentUrl() === '/preferences' ||
-      this.currentUrl().startsWith('/recipe/') ||
-      this.currentUrl().startsWith('/cookbook'),
+      this.currentPath() === '/generate' ||
+      this.currentPath() === '/preferences' ||
+      this.currentPath().startsWith('/recipe/') ||
+      this.currentPath().startsWith('/cookbook'),
   );
 
   backTarget = computed(() => {
-    if (this.currentUrl() === '/preferences') return '/generate';
-    if (this.currentUrl().startsWith('/recipe/')) return '/results';
-    if (this.currentUrl().startsWith('/cookbook/')) return '/cookbook';
+    if (this.currentPath() === '/preferences') return '/generate';
+    if (this.currentPath().startsWith('/recipe/')) return '/results';
+    if (this.currentPath().startsWith('/cookbook/')) return '/cookbook';
     return '/';
   });
 
   backLabel = computed(() => {
-    if (this.currentUrl() === '/preferences') return 'Ingredients';
-    if (this.currentUrl() === '/cookbook') return 'Back';
-    if (this.currentUrl().startsWith('/cookbook/')) return 'Cookbook';
-    if (this.currentUrl().startsWith('/recipe/')) return 'Back';
+    if (this.currentPath() === '/preferences') return 'Ingredients';
+    if (this.currentPath() === '/cookbook') return 'Back';
+    if (this.currentPath().startsWith('/cookbook/')) return 'Cookbook';
+    if (this.currentPath().startsWith('/recipe/')) return 'Back';
     return 'Home';
   });
 
   goBack(event: MouseEvent): void {
-    if (this.currentUrl() === '/cookbook' || this.currentUrl().startsWith('/recipe/')) {
+    const path = this.currentPath();
+
+    if (path.startsWith('/recipe/') || path.startsWith('/cookbook/')) {
+      event.preventDefault();
+      this.location.back();
+      return;
+    }
+
+    if (path === '/cookbook' && this.cameFromRecipe()) {
       event.preventDefault();
       this.location.back();
     }

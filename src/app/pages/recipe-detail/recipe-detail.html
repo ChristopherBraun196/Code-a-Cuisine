@@ -159,7 +159,7 @@
   </div>
   <div class="recipe-detail__cta">
     <p>Find inspiration for your next culinary adventure!</p>
-    <a routerLink="/cookbook" class="recipe-detail__cta-button">Cookbook</a>
+    <a routerLink="/cookbook" [queryParams]="{ from: 'recipe' }" class="recipe-detail__cta-button">Cookbook</a>
   </div>
 
   <div class="recipe-detail__regenerate-row">

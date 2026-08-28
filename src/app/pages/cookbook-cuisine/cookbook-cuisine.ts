@@ -50,14 +50,17 @@ export class CookbookCuisine {
 
   goToPage(page: number): void {
     this.currentPage.set(page);
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
   prevPage(): void {
     this.currentPage.update((page) => Math.max(1, page - 1));
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
   nextPage(): void {
     this.currentPage.update((page) => Math.min(this.totalPages(), page + 1));
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }
 }
 
