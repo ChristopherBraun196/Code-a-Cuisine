@@ -38,17 +38,20 @@ export class Header {
       this.currentUrl() === '/generate' ||
       this.currentUrl() === '/preferences' ||
       this.currentUrl().startsWith('/recipe/') ||
-      this.currentUrl() === '/cookbook',
+      this.currentUrl().startsWith('/cookbook'),
   );
+
   backTarget = computed(() => {
     if (this.currentUrl() === '/preferences') return '/generate';
     if (this.currentUrl().startsWith('/recipe/')) return '/results';
+    if (this.currentUrl().startsWith('/cookbook/')) return '/cookbook';
     return '/';
   });
 
   backLabel = computed(() => {
     if (this.currentUrl() === '/preferences') return 'Ingredients';
     if (this.currentUrl() === '/cookbook') return 'Back';
+    if (this.currentUrl().startsWith('/cookbook/')) return 'Cookbook';
     if (this.currentUrl().startsWith('/recipe/')) return 'Back';
     return 'Home';
   });
