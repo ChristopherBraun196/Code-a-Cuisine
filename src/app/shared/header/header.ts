@@ -2,6 +2,7 @@ import { Component, inject, computed } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
+import { Location } from '@angular/common';
 
 @Component({
   imports: [RouterLink],
@@ -14,6 +15,7 @@ import { filter, map, startWith } from 'rxjs';
 })
 export class Header {
   private router = inject(Router);
+  private location = inject(Location);
 
   private currentUrl = toSignal(
     this.router.events.pipe(
@@ -38,7 +40,6 @@ export class Header {
       this.currentUrl().startsWith('/recipe/') ||
       this.currentUrl() === '/cookbook',
   );
-
   backTarget = computed(() => {
     if (this.currentUrl() === '/preferences') return '/generate';
     if (this.currentUrl().startsWith('/recipe/')) return '/results';
@@ -47,7 +48,15 @@ export class Header {
 
   backLabel = computed(() => {
     if (this.currentUrl() === '/preferences') return 'Ingredients';
-    if (this.currentUrl().startsWith('/recipe/')) return 'Recipe results';
+    if (this.currentUrl() === '/cookbook') return 'Back';
+    if (this.currentUrl().startsWith('/recipe/')) return 'Back';
     return 'Home';
   });
+
+  goBack(event: MouseEvent): void {
+    if (this.currentUrl() === '/cookbook' || this.currentUrl().startsWith('/recipe/')) {
+      event.preventDefault();
+      this.location.back();
+    }
+  }
 }

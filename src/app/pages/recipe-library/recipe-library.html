@@ -1,1 +1,57 @@
-<p>recipe-library works!</p>
+<section class="cookbook">
+  <div class="cookbook__hero">
+    <div class="cookbook__intro">
+      <h1>Cookbook</h1>
+      <p>
+        From quick bites to gourmet delights, explore them all in our ultimate cookbook and get
+        inspired for your next culinary adventure.
+      </p>
+    </div>
+
+    <div class="cookbook__liked">
+      <p class="cookbook__liked-label">
+        Most liked recipes
+        <img src="images/icons/heart.svg" alt="" />
+      </p>
+      <div
+        class="cookbook__liked-list"
+        (mousedown)="startDrag($event)"
+        (mousemove)="onDrag($event)"
+        (mouseup)="stopDrag($event)"
+        (mouseleave)="stopDrag($event)"
+      >
+        @for (recipe of mostLiked; track recipe.id) {
+          <a [routerLink]="['/recipe', recipe.id]" class="cookbook__liked-card">
+            <p class="cookbook__liked-time">
+              <img src="images/icons/schedule.svg" alt="" />
+              Cooking time: {{ recipe.cookingTime }}min
+              <span class="cookbook__liked-likes">
+                <img src="images/icons/heart.svg" alt="" />
+                {{ recipe.likes }}
+              </span>
+            </p>
+            <p class="cookbook__liked-name">{{ recipe.name }}</p>
+          </a>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="cookbook__cuisines">
+    @for (cuisine of cuisines; track cuisine.slug) {
+      <a [routerLink]="['/cookbook', cuisine.slug]" class="cookbook__cuisine">
+        <h2>
+          {{ cuisine.name }} <span aria-hidden="true">{{ cuisine.emoji }}</span>
+        </h2>
+        <img [src]="cuisine.image" alt="" class="cookbook__cuisine-image" />
+      </a>
+    }
+  </div>
+
+  <div class="cookbook__generate-row">
+    <a routerLink="/generate" class="cookbook__generate">
+      Generate new recipe
+      <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</section>

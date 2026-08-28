@@ -4,7 +4,7 @@
 />
 
 @if (!isHomePage()) {
-  <a [routerLink]="backTarget()" class="header__back">
+  <a [routerLink]="backTarget()" (click)="goBack($event)" class="header__back">
     <svg
       class="header__back-icon"
       viewBox="0 0 22 15"
