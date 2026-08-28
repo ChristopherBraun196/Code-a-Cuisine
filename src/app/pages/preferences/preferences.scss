@@ -1,5 +1,6 @@
 @use '../../../styles/colors' as *;
 @use '../../../styles/layout' as *;
+@use '../../../styles/mixins' as *;
 
 .preferences {
   background-color: white;
@@ -100,7 +101,7 @@
         margin: 0 auto;
       }
 
-      &:hover {
+      @include hover {
         background-color: $color-olive-highlight;
       }
     }
@@ -202,7 +203,7 @@
       font-size: 1rem;
     }
 
-    &:hover {
+    @include hover {
       background-color: $color-cream-hover;
     }
 
@@ -238,7 +239,7 @@
       padding: 1.25rem 0.5rem;
     }
 
-    &:hover {
+    @include hover {
       background-color: $color-green-mid;
     }
   }

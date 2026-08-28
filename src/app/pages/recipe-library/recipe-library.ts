@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Recipe } from '../../shared/models/recipe.model';
+import { Recipes } from '../../shared/services/recipes';
 
 @Component({
   imports: [RouterLink],
@@ -8,11 +10,10 @@ import { RouterLink } from '@angular/router';
   templateUrl: './recipe-library.html',
 })
 export class RecipeLibrary {
-  mostLiked: LikedRecipe[] = [
-    { id: 1, name: 'Pasta with spinach and cherry tomatoes', cookingTime: 20, likes: 66 },
-    { id: 2, name: 'Low Carb Vegan No-Bake Paleo Bars', cookingTime: 35, likes: 57 },
-    { id: 3, name: 'Schnitzel with potato salad', cookingTime: 40, likes: 48 },
-  ];
+  private recipesService = inject(Recipes);
+
+  mostLiked = signal<Recipe[]>([]);
+  loadingMostLiked = signal(true);
 
   cuisines: Cuisine[] = [
     { name: 'Italian cuisine', emoji: '🤌', image: 'images/img/italien-card.png', slug: 'italian' },
@@ -32,6 +33,13 @@ export class RecipeLibrary {
   private hasMoved = false;
   private startX = 0;
   private scrollLeftStart = 0;
+
+  constructor() {
+    this.recipesService.getMostLiked(3).then((recipes) => {
+      this.mostLiked.set(recipes);
+      this.loadingMostLiked.set(false);
+    });
+  }
 
   startDrag(event: MouseEvent): void {
     event.preventDefault();
@@ -66,13 +74,6 @@ export class RecipeLibrary {
       );
     }
   }
-}
-
-interface LikedRecipe {
-  id: number;
-  name: string;
-  cookingTime: number;
-  likes: number;
 }
 
 interface Cuisine {

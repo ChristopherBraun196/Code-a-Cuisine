@@ -1,5 +1,6 @@
 @use '../../../styles/colors' as *;
 @use '../../../styles/layout' as *;
+@use '../../../styles/mixins' as *;
 
 .privacy-policy {
   background-color: $color-olive;
@@ -98,7 +99,7 @@
       font-size: 1rem;
     }
 
-    &:hover {
+    @include hover {
       background-color: $color-olive-footer;
     }
   }

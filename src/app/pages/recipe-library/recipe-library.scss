@@ -1,5 +1,6 @@
 @use '../../../styles/colors' as *;
 @use '../../../styles/layout' as *;
+@use '../../../styles/mixins' as *;
 
 .cookbook {
   background-color: white;
@@ -204,7 +205,7 @@
       margin-top: 1.5rem;
       padding: 1rem;
 
-      &:hover {
+      @include hover {
         background-color: $color-olive-highlight;
       }
     }

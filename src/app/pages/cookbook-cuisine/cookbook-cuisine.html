@@ -6,68 +6,72 @@
   <img [src]="heroDesktop()" [alt]="cuisineName()" class="cuisine__hero cuisine__hero--desktop" />
   <img [src]="heroMobile()" [alt]="cuisineName()" class="cuisine__hero cuisine__hero--mobile" />
 
-  <ol class="cuisine__list">
-    @for (recipe of pagedRecipes(); track recipe.id) {
-      <li class="cuisine__item">
-        <span class="cuisine__item-number"
-          >{{ $index + 1 + (currentPage() - 1) * itemsPerPage }}.</span
-        >
-        <a [routerLink]="['/recipe', recipe.id]" class="cuisine__item-main">
-          <p class="cuisine__item-time">
-            <img src="images/icons/schedule.svg" alt="" />
-            Cooking time: {{ recipe.cookingTime }}min
-          </p>
-          <p class="cuisine__item-title">{{ recipe.name }}</p>
-        </a>
-        <div class="cuisine__item-tags">
-          @for (tag of recipe.tags; track tag) {
-            <span class="cuisine__tag">{{ tag }}</span>
-          }
-          <span class="cuisine__likes">
-            <img src="images/icons/heart.svg" alt="" />
-            {{ recipe.likes }}
-          </span>
-        </div>
-      </li>
-    }
-  </ol>
-
-  <nav class="cuisine__pagination">
-    <button
-      type="button"
-      class="cuisine__pagination-arrow"
-      aria-label="Previous page"
-      (click)="prevPage()"
-      [disabled]="currentPage() === 1"
-    >
-      <span aria-hidden="true">&lsaquo;</span>
-    </button>
-
-    <div class="cuisine__pagination-numbers">
-      @for (page of pageNumbers(); track $index) {
-        @if (page === 'ellipsis') {
-          <span class="cuisine__pagination-ellipsis">...</span>
-        } @else {
-          <button
-            type="button"
-            class="cuisine__pagination-number"
-            [class.cuisine__pagination-number--active]="page === currentPage()"
-            (click)="goToPage(page)"
+  @if (loading()) {
+    <p class="cuisine__loading">Loading recipes…</p>
+  } @else {
+    <ol class="cuisine__list">
+      @for (recipe of pagedRecipes(); track recipe.id) {
+        <li class="cuisine__item">
+          <span class="cuisine__item-number"
+            >{{ $index + 1 + (currentPage() - 1) * itemsPerPage }}.</span
           >
-            {{ page }}
-          </button>
-        }
+          <a [routerLink]="['/recipe', recipe.id]" class="cuisine__item-main">
+            <p class="cuisine__item-time">
+              <img src="images/icons/schedule.svg" alt="" />
+              Cooking time: {{ recipe.cookingTime }}min
+            </p>
+            <p class="cuisine__item-title">{{ recipe.name }}</p>
+          </a>
+          <div class="cuisine__item-tags">
+            @for (tag of getDisplayTags(recipe); track tag) {
+              <span class="cuisine__tag">{{ tag }}</span>
+            }
+            <span class="cuisine__likes">
+              <img src="images/icons/heart.svg" alt="" />
+              {{ recipe.likes }}
+            </span>
+          </div>
+        </li>
       }
-    </div>
+    </ol>
 
-    <button
-      type="button"
-      class="cuisine__pagination-arrow"
-      aria-label="Next page"
-      (click)="nextPage()"
-      [disabled]="currentPage() === totalPages()"
-    >
-      <span aria-hidden="true">&rsaquo;</span>
-    </button>
-  </nav>
+    <nav class="cuisine__pagination">
+      <button
+        type="button"
+        class="cuisine__pagination-arrow"
+        aria-label="Previous page"
+        (click)="prevPage()"
+        [disabled]="currentPage() === 1"
+      >
+        <span aria-hidden="true">&lsaquo;</span>
+      </button>
+
+      <div class="cuisine__pagination-numbers">
+        @for (page of pageNumbers(); track $index) {
+          @if (page === 'ellipsis') {
+            <span class="cuisine__pagination-ellipsis">...</span>
+          } @else {
+            <button
+              type="button"
+              class="cuisine__pagination-number"
+              [class.cuisine__pagination-number--active]="page === currentPage()"
+              (click)="goToPage(page)"
+            >
+              {{ page }}
+            </button>
+          }
+        }
+      </div>
+
+      <button
+        type="button"
+        class="cuisine__pagination-arrow"
+        aria-label="Next page"
+        (click)="nextPage()"
+        [disabled]="currentPage() === totalPages()"
+      >
+        <span aria-hidden="true">&rsaquo;</span>
+      </button>
+    </nav>
+  }
 </section>

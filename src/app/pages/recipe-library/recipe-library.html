@@ -20,18 +20,22 @@
         (mouseup)="stopDrag($event)"
         (mouseleave)="stopDrag($event)"
       >
-        @for (recipe of mostLiked; track recipe.id) {
-          <a [routerLink]="['/recipe', recipe.id]" class="cookbook__liked-card">
-            <p class="cookbook__liked-time">
-              <img src="images/icons/schedule.svg" alt="" />
-              Cooking time: {{ recipe.cookingTime }}min
-              <span class="cookbook__liked-likes">
-                <img src="images/icons/heart.svg" alt="" />
-                {{ recipe.likes }}
-              </span>
-            </p>
-            <p class="cookbook__liked-name">{{ recipe.name }}</p>
-          </a>
+        @if (loadingMostLiked()) {
+          <p>Loading…</p>
+        } @else {
+          @for (recipe of mostLiked(); track recipe.id) {
+            <a [routerLink]="['/recipe', recipe.id]" class="cookbook__liked-card">
+              <p class="cookbook__liked-time">
+                <img src="images/icons/schedule.svg" alt="" />
+                Cooking time: {{ recipe.cookingTime }}min
+                <span class="cookbook__liked-likes">
+                  <img src="images/icons/heart.svg" alt="" />
+                  {{ recipe.likes }}
+                </span>
+              </p>
+              <p class="cookbook__liked-name">{{ recipe.name }}</p>
+            </a>
+          }
         }
       </div>
     </div>

@@ -1,7 +1,9 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
+import { getDisplayTags, Recipe } from '../../shared/models/recipe.model';
+import { Recipes } from '../../shared/services/recipes';
 
 @Component({
   imports: [RouterLink],
@@ -11,6 +13,9 @@ import { map } from 'rxjs';
 })
 export class CookbookCuisine {
   private route = inject(ActivatedRoute);
+  private recipesService = inject(Recipes);
+  protected readonly getDisplayTags = getDisplayTags;
+
   readonly itemsPerPage = 15;
 
   private cuisineSlug = toSignal(
@@ -22,15 +27,15 @@ export class CookbookCuisine {
   heroDesktop = computed(() => CUISINE_INFO[this.cuisineSlug()]?.heroDesktop ?? '');
   heroMobile = computed(() => CUISINE_INFO[this.cuisineSlug()]?.heroMobile ?? '');
 
-  recipes: Recipe[] = buildRecipes();
-
+  recipes = signal<Recipe[]>([]);
+  loading = signal(true);
   currentPage = signal(1);
 
-  totalPages = computed(() => Math.ceil(this.recipes.length / this.itemsPerPage));
+  totalPages = computed(() => Math.ceil(this.recipes().length / this.itemsPerPage));
 
   pagedRecipes = computed(() => {
     const start = (this.currentPage() - 1) * this.itemsPerPage;
-    return this.recipes.slice(start, start + this.itemsPerPage);
+    return this.recipes().slice(start, start + this.itemsPerPage);
   });
 
   pageNumbers = computed<(number | 'ellipsis')[]>(() => {
@@ -48,6 +53,18 @@ export class CookbookCuisine {
     return pages;
   });
 
+  constructor() {
+    effect(() => {
+      const cuisine = this.cuisineSlug();
+      this.loading.set(true);
+      this.recipesService.getByCuisine(cuisine as Recipe['cuisine']).then((recipes) => {
+        this.recipes.set(recipes);
+        this.currentPage.set(1);
+        this.loading.set(false);
+      });
+    });
+  }
+
   goToPage(page: number): void {
     this.currentPage.set(page);
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -62,32 +79,6 @@ export class CookbookCuisine {
     this.currentPage.update((page) => Math.min(this.totalPages(), page + 1));
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
-}
-
-function buildRecipes(): Recipe[] {
-  const templates: Omit<Recipe, 'id'>[] = [
-    {
-      name: 'Pasta with spinach and cherry tomatoes',
-      cookingTime: 20,
-      tags: ['Vegetarian', 'Quick'],
-      likes: 66,
-    },
-    { name: 'Creamy garlic shrimp pasta', cookingTime: 22, tags: ['Quick'], likes: 32 },
-    { name: 'Funghi salami pizza', cookingTime: 16, tags: ['Quick'], likes: 42 },
-  ];
-
-  return Array.from({ length: 40 }, (_, index) => ({
-    id: index + 1,
-    ...templates[index % templates.length],
-  }));
-}
-
-interface Recipe {
-  id: number;
-  name: string;
-  cookingTime: number;
-  tags: string[];
-  likes: number;
 }
 
 const CUISINE_INFO: Record<string, { name: string; heroDesktop: string; heroMobile: string }> = {

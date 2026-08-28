@@ -1,0 +1,253 @@
+<!-- npm run seed
+ npm run seed:clear
+ npm run seed:admin  -->
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Code a Cuisine — Seed Admin</title>
+    <style>
+      :root {
+        --bg: #14201180;
+        --bg-solid: #142212;
+        --surface: #1a2a17;
+        --border: #29391f;
+        --text: #eef3e6;
+        --text-muted: #a3b399;
+        --accent: #7cb26f;
+        --accent-strong: #9ccb8f;
+        --danger: #e4a874;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg-solid);
+        color: var(--text);
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        padding: 2.5rem 1.5rem;
+      }
+
+      .page {
+        max-width: 46rem;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+        margin: 0 0 0.25rem;
+      }
+
+      .subtitle {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin: 0 0 2rem;
+      }
+
+      .global-actions {
+        display: flex;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+      }
+
+      button {
+        font-family: inherit;
+        font-size: 0.9rem;
+        border-radius: 0.5rem;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text);
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+      }
+
+      button:hover {
+        border-color: var(--accent);
+      }
+
+      button.seed {
+        color: var(--accent-strong);
+      }
+
+      button.clear {
+        color: var(--danger);
+      }
+
+      button:disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 0.75rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      th {
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      td.count {
+        font-variant-numeric: tabular-nums;
+      }
+
+      td.actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+      }
+
+      #log {
+        margin-top: 1.5rem;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <h1>Seed Admin</h1>
+      <p class="subtitle">
+        Lokales Dev-Tool — schreibt/löscht Test-Rezepte direkt in Firebase über das Admin SDK. Nicht
+        Teil der ausgelieferten App.
+      </p>
+
+      <div class="global-actions">
+        <button class="seed" data-action="seed" data-cuisine="all">Alle Kochstile befüllen</button>
+        <button class="clear" data-action="clear" data-cuisine="all">Alle Kochstile löschen</button>
+        <button data-action="refresh">Aktualisieren</button>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Kochstil</th>
+            <th>Anzahl</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+
+      <div id="log"></div>
+    </div>
+
+    <script>
+      const CUISINES = ['italian', 'german', 'japanese', 'indian', 'gourmet', 'fusion'];
+      const rowsEl = document.getElementById('rows');
+      const logEl = document.getElementById('log');
+
+      function log(message) {
+        const time = new Date().toLocaleTimeString('de-DE');
+        logEl.textContent = `[${time}] ${message}\n` + logEl.textContent;
+      }
+
+      function setButtonsDisabled(disabled) {
+        document.querySelectorAll('button').forEach((button) => (button.disabled = disabled));
+      }
+
+      async function fetchStatus() {
+        const response = await fetch('/api/status');
+        return response.json();
+      }
+
+      function renderRows(counts) {
+        rowsEl.innerHTML = '';
+        for (const cuisine of CUISINES) {
+          const tr = document.createElement('tr');
+
+          const nameTd = document.createElement('td');
+          nameTd.textContent = cuisine;
+          tr.appendChild(nameTd);
+
+          const countTd = document.createElement('td');
+          countTd.className = 'count';
+          countTd.textContent = counts[cuisine] ?? 0;
+          tr.appendChild(countTd);
+
+          const actionsTd = document.createElement('td');
+          actionsTd.className = 'actions';
+
+          const seedButton = document.createElement('button');
+          seedButton.className = 'seed';
+          seedButton.textContent = 'Befüllen';
+          seedButton.dataset.action = 'seed';
+          seedButton.dataset.cuisine = cuisine;
+
+          const clearButton = document.createElement('button');
+          clearButton.className = 'clear';
+          clearButton.textContent = 'Löschen';
+          clearButton.dataset.action = 'clear';
+          clearButton.dataset.cuisine = cuisine;
+
+          actionsTd.append(seedButton, clearButton);
+          tr.appendChild(actionsTd);
+
+          rowsEl.appendChild(tr);
+        }
+      }
+
+      async function refresh() {
+        const status = await fetchStatus();
+        renderRows(status.counts);
+        log(`Aktualisiert — ${status.total} Rezepte insgesamt.`);
+      }
+
+      async function handleAction(action, cuisine) {
+        setButtonsDisabled(true);
+        try {
+          if (action === 'seed') {
+            const response = await fetch('/api/seed', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ cuisine }),
+            });
+            const data = await response.json();
+            log(`Befüllt: ${cuisine} (${data.count} Rezepte).`);
+          } else if (action === 'clear') {
+            await fetch('/api/clear', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ cuisine }),
+            });
+            log(`Gelöscht: ${cuisine}.`);
+          }
+          await refresh();
+        } catch (error) {
+          log(`Fehler: ${error.message}`);
+        } finally {
+          setButtonsDisabled(false);
+        }
+      }
+
+      document.addEventListener('click', (event) => {
+        const button = event.target.closest('button');
+        if (!button) return;
+
+        const { action, cuisine } = button.dataset;
+        if (action === 'refresh') {
+          refresh();
+        } else if (action) {
+          handleAction(action, cuisine);
+        }
+      });
+
+      refresh();
+    </script>
+  </body>
+</html>

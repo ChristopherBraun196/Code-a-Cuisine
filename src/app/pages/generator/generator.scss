@@ -1,5 +1,6 @@
 @use '../../../styles/colors' as *;
 @use '../../../styles/layout' as *;
+@use '../../../styles/mixins' as *;
 
 .generate {
   background-color: white;
@@ -148,7 +149,7 @@
       border-radius: 0.75rem;
       font-size: 1.15rem;
 
-      &:hover {
+      @include hover {
         background-color: $color-cream-highlight;
       }
 
@@ -156,8 +157,10 @@
         margin-bottom: 6.5rem;
       }
 
-      &.generate__list-item--editing:hover {
-        background-color: transparent;
+      @media (hover: hover) and (pointer: fine) {
+        &.generate__list-item--editing:hover {
+          background-color: transparent;
+        }
       }
     }
 
@@ -221,7 +224,7 @@
         height: auto;
       }
 
-      &:hover {
+      @include hover {
         background-color: $color-olive-highlight;
       }
 
@@ -449,7 +452,7 @@
     cursor: pointer;
     border-radius: 0.5rem;
 
-    &:hover {
+    @include hover {
       background-color: $color-cream-highlight;
     }
 
@@ -474,7 +477,7 @@
       margin-top: 0;
     }
 
-    &:hover {
+    @include hover {
       background-color: $color-green-mid;
     }
   }

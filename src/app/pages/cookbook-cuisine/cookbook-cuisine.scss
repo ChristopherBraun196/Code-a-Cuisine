@@ -1,5 +1,6 @@
 @use '../../../styles/colors' as *;
 @use '../../../styles/layout' as *;
+@use '../../../styles/mixins' as *;
 
 .cuisine {
   background-color: white;
@@ -31,7 +32,7 @@
     text-decoration: none;
     padding: 0.75rem 1.5rem;
 
-    &:hover {
+    @include hover {
       background-color: $color-green-mid;
     }
   }
@@ -231,7 +232,7 @@
       line-height: 1;
       color: $color-green-dark;
 
-      &:hover {
+      @include hover {
         color: $color-green-mid;
       }
 
@@ -264,7 +265,7 @@
       padding: 0;
       font-family: 'Quicksand';
 
-      &:hover {
+      @include hover {
         color: $color-green-mid;
       }
 

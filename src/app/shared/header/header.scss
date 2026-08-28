@@ -1,4 +1,5 @@
 @use '../../../styles/colors' as *;
+@use '../../../styles/mixins' as *;
 :host {
   position: absolute;
   top: 0;
@@ -46,7 +47,7 @@
     display: block;
   }
 
-  &:hover {
+  @include hover {
     background-color: $color-olive-footer;
   }
 }
@@ -54,9 +55,9 @@
 :host(.header--light) {
   .header__back {
     color: $color-green-mid;
-  }
 
-  .header__back:hover {
-    background-color: $color-olive-highlight;
+    @include hover {
+      background-color: $color-olive-highlight;
+    }
   }
 }
