@@ -1,22 +1,33 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { RecipeGenerator } from '../../shared/services/recipe-generator';
+import { ErrorPopup } from '../../shared/error-popup/error-popup';
+import { TimeCategory } from '../../shared/models/recipe.model';
+
+function toCookingTime(timeCategory: TimeCategory | undefined): CookingTime | null {
+  if (!timeCategory) return null;
+  return timeCategory === 'elaborate' ? 'complex' : timeCategory;
+}
 
 @Component({
-  imports: [FormsModule],
+  imports: [FormsModule, ErrorPopup],
   selector: 'app-preferences',
   styleUrl: './preferences.scss',
   templateUrl: './preferences.html',
 })
 export class Preferences {
   private router = inject(Router);
+  private recipeGenerator = inject(RecipeGenerator);
 
-  portions = signal(2);
-  helpers = signal(1);
+  portions = signal(this.recipeGenerator.preferences()?.servings ?? 2);
+  helpers = signal(this.recipeGenerator.preferences()?.helperCount ?? 1);
 
-  cookingTime = signal<CookingTime | null>(null);
-  cuisine = signal<Cuisine | null>(null);
-  diet = signal<Diet | null>(null);
+  cookingTime = signal<CookingTime | null>(
+    toCookingTime(this.recipeGenerator.preferences()?.timeCategory),
+  );
+  cuisine = signal<Cuisine | null>(this.recipeGenerator.preferences()?.cuisine ?? null);
+  diet = signal<Diet | null>(this.recipeGenerator.preferences()?.diet ?? null);
 
   incrementPortions(): void {
     this.portions.update((value) => Math.min(12, value + 1));
@@ -55,6 +66,16 @@ export class Preferences {
   }
 
   generateRecipe(): void {
+    const cookingTime = this.cookingTime()!;
+
+    this.recipeGenerator.preferences.set({
+      servings: this.portions(),
+      timeCategory: cookingTime === 'complex' ? 'elaborate' : cookingTime,
+      cuisine: this.cuisine()!,
+      diet: this.diet()!,
+      helperCount: this.helpers(),
+    });
+
     this.router.navigate(['/generating']);
   }
 }

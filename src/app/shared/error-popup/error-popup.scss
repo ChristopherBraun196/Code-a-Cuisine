@@ -1,0 +1,96 @@
+@use '../../../styles/colors' as *;
+@use '../../../styles/mixins' as *;
+
+.error-popup {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(16, 49, 11, 0.45);
+  z-index: 100;
+  padding: 1rem;
+
+  &__card {
+    position: relative;
+    background: $color-olive;
+    border-radius: 1.25rem;
+    padding: 2.5rem;
+    max-width: 28rem;
+    box-shadow: 0 0.5rem 2rem rgba(16, 49, 11, 0.25);
+
+    @media (max-width: 30rem) {
+      padding: 1.5rem;
+    }
+  }
+
+  &__close {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    color: $color-cream;
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+
+    @include hover {
+      opacity: 0.7;
+    }
+  }
+
+  &__title {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 1.75rem;
+    line-height: 1;
+    letter-spacing: 0;
+    color: $color-cream;
+    margin: 0 1.5rem 1rem 0;
+
+    @media (max-width: 30rem) {
+      font-size: 1.375rem;
+    }
+  }
+
+  &__message {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 1.125rem;
+    line-height: 1.625rem;
+    letter-spacing: 0;
+    color: $color-cream;
+    margin: 0 0 1.5rem;
+
+    @media (max-width: 30rem) {
+      font-size: 1rem;
+      line-height: 1.5rem;
+    }
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    color: $color-cream;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 500;
+    font-size: 1.25rem;
+    line-height: 1.25rem;
+    letter-spacing: 0;
+    cursor: pointer;
+    padding: 0;
+
+    @media (max-width: 30rem) {
+      font-size: 1.125rem;
+    }
+
+    @include hover {
+      opacity: 0.8;
+    }
+  }
+}

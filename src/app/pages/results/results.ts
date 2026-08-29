@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-
-
+import { RecipeGenerator } from '../../shared/services/recipe-generator';
+import { Recipe, TIME_CATEGORY_LABELS } from '../../shared/models/recipe.model';
 
 @Component({
   imports: [RouterLink],
@@ -10,18 +10,19 @@ import { RouterLink } from '@angular/router';
   templateUrl: './results.html',
 })
 export class Results {
-  cuisine = 'Italian';
-  cookingTime = 'Quick';
+  private recipeGenerator = inject(RecipeGenerator);
 
-  recipes: Recipe[] = [
-    { id: 1, name: 'Pasta with spinach and cherry tomatoes', cookingTime: 20 },
-    { id: 2, name: 'Creamy garlic shrimp pasta', cookingTime: 22 },
-    { id: 3, name: 'Pasta alla Trapanese (Sicilian Tomato Pesto)', cookingTime: 20 },
-  ];
-}
+  get recipes(): Recipe[] {
+    return this.recipeGenerator.results();
+  }
 
-interface Recipe {
-  id: number;
-  name: string;
-  cookingTime: number;
+  get cuisine(): string {
+    const value = this.recipeGenerator.preferences()?.cuisine ?? '';
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  }
+
+  get cookingTime(): string {
+    const timeCategory = this.recipeGenerator.preferences()?.timeCategory;
+    return timeCategory ? TIME_CATEGORY_LABELS[timeCategory] : '';
+  }
 }

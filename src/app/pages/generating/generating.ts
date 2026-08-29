@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { RecipeGenerator } from '../../shared/services/recipe-generator';
 
 @Component({
   imports: [],
@@ -9,10 +10,12 @@ import { Router } from '@angular/router';
 })
 export class Generating implements OnInit {
   private router = inject(Router);
+  private recipeGenerator = inject(RecipeGenerator);
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.router.navigate(['/results']);
-    }, 3000);
+    this.recipeGenerator
+      .generate()
+      .then(() => this.router.navigate(['/results']))
+      .catch(() => this.router.navigate(['/preferences']));
   }
 }

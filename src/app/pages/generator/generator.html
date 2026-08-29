@@ -123,7 +123,12 @@
     </div>
 
     <div class="generate__form-footer">
-      <button type="button" class="generate__next-button" (click)="goToNextStep()">
+      <button
+        type="button"
+        class="generate__next-button"
+        [disabled]="ingredients().length === 0"
+        (click)="goToNextStep()"
+      >
         Next step
       </button>
       <p class="generate__error" [class.generate__error--visible]="showNoIngredientsError()">

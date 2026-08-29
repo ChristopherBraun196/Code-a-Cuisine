@@ -16,6 +16,7 @@ export class RecipeDetail {
 
   recipe = signal<Recipe | null>(null);
   loading = signal(true);
+  liked = signal(false);
 
   ingredientsExpanded = signal(true);
   directionsExpanded = signal(true);
@@ -26,6 +27,7 @@ export class RecipeDetail {
       this.recipesService.getById(id).then((recipe) => {
         this.recipe.set(recipe);
         this.loading.set(false);
+        this.liked.set(localStorage.getItem(`liked-${id}`) === 'true');
       });
     } else {
       this.loading.set(false);
@@ -49,5 +51,27 @@ export class RecipeDetail {
 
   toggleDirections(): void {
     this.directionsExpanded.update((value) => !value);
+  }
+
+  heartIcon(): string {
+    return this.liked() ? 'images/icons/heart_full.svg' : 'images/icons/heart.svg';
+  }
+
+  async toggleLike(): Promise<void> {
+    const recipe = this.recipe();
+    if (!recipe || this.liked()) return;
+
+    const previousLikes = recipe.likes;
+    this.liked.set(true);
+    localStorage.setItem(`liked-${recipe.id}`, 'true');
+    this.recipe.set({ ...recipe, likes: previousLikes + 1 });
+
+    try {
+      await this.recipesService.likeRecipe(recipe.id);
+    } catch {
+      this.liked.set(false);
+      localStorage.removeItem(`liked-${recipe.id}`);
+      this.recipe.set({ ...recipe, likes: previousLikes });
+    }
   }
 }

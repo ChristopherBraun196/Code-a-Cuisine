@@ -1,0 +1,15 @@
+@if (recipeGenerator.errorMessage(); as message) {
+  <div class="error-popup">
+    <div class="error-popup__card">
+      <button type="button" class="error-popup__close" (click)="dismiss()" aria-label="Close">
+        ✕
+      </button>
+      <h2 class="error-popup__title">Ups! Not quite enough...</h2>
+      <p class="error-popup__message">{{ message }}</p>
+      <button type="button" class="error-popup__link" (click)="goBackToIngredients()">
+        Go back to ingredients
+        <span aria-hidden="true">→</span>
+      </button>
+    </div>
+  </div>
+}

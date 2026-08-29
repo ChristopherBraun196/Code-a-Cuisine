@@ -1,6 +1,7 @@
 import { Service } from '@angular/core';
-import { get, ref } from 'firebase/database';
-import { database } from '../../firebase';
+import { get, ref, runTransaction } from 'firebase/database';
+import { signInAnonymously } from 'firebase/auth';
+import { auth, database } from '../../firebase';
 import { Cuisine, Recipe } from '../models/recipe.model';
 
 @Service()
@@ -31,5 +32,17 @@ export class Recipes {
   async getMostLiked(count: number): Promise<Recipe[]> {
     const all = await this.getAll();
     return [...all].sort((a, b) => b.likes - a.likes).slice(0, count);
+  }
+
+  async likeRecipe(id: string): Promise<number> {
+    if (!auth.currentUser) {
+      await signInAnonymously(auth);
+    }
+
+    const result = await runTransaction(
+      ref(database, `recipes/${id}/likes`),
+      (current) => (current || 0) + 1,
+    );
+    return result.snapshot.val();
   }
 }

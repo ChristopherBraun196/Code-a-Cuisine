@@ -472,6 +472,12 @@
     margin-top: 2rem;
     cursor: pointer;
 
+    &:disabled {
+      background-color: $color-olive-light;
+      color: $color-olive;
+      cursor: not-allowed;
+    }
+
     @media (max-width: 30rem) {
      
       margin-top: 0;

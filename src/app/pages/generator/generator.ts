@@ -1,6 +1,7 @@
 import { Component, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { RecipeGenerator } from '../../shared/services/recipe-generator';
 
 @Component({
   imports: [FormsModule],
@@ -10,8 +11,15 @@ import { Router } from '@angular/router';
 })
 export class Generator {
   private router = inject(Router);
+  private recipeGenerator = inject(RecipeGenerator);
 
-  ingredients = signal<Ingredient[]>([]);
+  ingredients = signal<Ingredient[]>(
+    this.recipeGenerator.ingredients().map((ingredient) => ({
+      name: ingredient.name,
+      amount: ingredient.amount ?? 0,
+      unit: ingredient.unit === 'g' ? 'gram' : (ingredient.unit as Ingredient['unit']),
+    })),
+  );
   showNameError = signal(false);
   showAmountError = signal(false);
   showNoIngredientsError = signal(false);
@@ -60,6 +68,15 @@ export class Generator {
       return;
     }
     this.showNoIngredientsError.set(false);
+
+    this.recipeGenerator.ingredients.set(
+      this.ingredients().map((ingredient) => ({
+        name: ingredient.name,
+        amount: ingredient.amount,
+        unit: ingredient.unit === 'gram' ? 'g' : ingredient.unit,
+      })),
+    );
+
     this.router.navigate(['/preferences']);
   }
 

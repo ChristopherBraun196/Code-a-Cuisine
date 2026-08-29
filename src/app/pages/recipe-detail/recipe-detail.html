@@ -92,7 +92,7 @@
               <li>
                 @if (ingredient.amount) {
                   <span class="recipe-detail__ingredient-amount"
-                    >{{ ingredient.amount }} {{ ingredient.unit }}</span
+                    >{{ ingredient.amount }} {{ ingredient.unit === 'piece' ? '' : ingredient.unit }}</span
                   >
                 }
                 <span class="recipe-detail__ingredient-name">{{ ingredient.name }}</span>
@@ -108,7 +108,7 @@
               <li>
                 @if (ingredient.amount) {
                   <span class="recipe-detail__ingredient-amount"
-                    >{{ ingredient.amount }} {{ ingredient.unit }}</span
+                    >{{ ingredient.amount }} {{ ingredient.unit === 'piece' ? '' : ingredient.unit }}</span
                   >
                 }
                 <span class="recipe-detail__ingredient-name">{{ ingredient.name }}</span>
@@ -169,7 +169,7 @@
           <strong>Just finished this meal?</strong>
           Give it a heart, so that the others know this is delicious.
         </p>
-        <img src="images/icons/heart.svg" alt="" class="recipe-detail__like-icon" />
+        <img [src]="heartIcon()" alt="" class="recipe-detail__like-icon" (click)="toggleLike()" />
       </div>
     </div>
     <div class="recipe-detail__cta">
