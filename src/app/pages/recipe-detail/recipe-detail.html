@@ -122,7 +122,7 @@
               <li>
                 @if (ingredient.amount) {
                   <span class="recipe-detail__ingredient-amount"
-                    >{{ ingredient.amount }} {{ ingredient.unit === 'piece' ? '' : ingredient.unit }}</span
+                    >{{ ingredient.amount }} {{ displayUnit(ingredient.unit) }}</span
                   >
                 }
                 <span class="recipe-detail__ingredient-name">{{ ingredient.name }}</span>
@@ -138,7 +138,7 @@
               <li>
                 @if (ingredient.amount) {
                   <span class="recipe-detail__ingredient-amount"
-                    >{{ ingredient.amount }} {{ ingredient.unit === 'piece' ? '' : ingredient.unit }}</span
+                    >{{ ingredient.amount }} {{ displayUnit(ingredient.unit) }}</span
                   >
                 }
                 <span class="recipe-detail__ingredient-name">{{ ingredient.name }}</span>

@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { getDisplayTags, Nutrition, Recipe } from '../../shared/models/recipe.model';
+import { Recipes } from '../../shared/services/recipes';
 
 /** Calories per gram for each macronutrient, used to derive % of total energy. */
 const KCAL_PER_GRAM: Record<'protein' | 'carbs' | 'fat', number> = {
@@ -8,7 +9,14 @@ const KCAL_PER_GRAM: Record<'protein' | 'carbs' | 'fat', number> = {
   carbs: 4,
   fat: 9,
 };
-import { Recipes } from '../../shared/services/recipes';
+
+/**
+ * Unit strings meaning "a countable item" that should not be shown next to the
+ * amount (e.g. "4 Eier" instead of "4 piece Eier"). Extra ingredients don't use
+ * the fixed unit enum, so Gemini may return a localized word like "Stück"
+ * instead of "piece" for German recipes.
+ */
+const PIECE_UNITS = new Set(['piece', 'stück', 'stueck']);
 
 /** Full detail view for a single recipe, loaded by ID from the route. */
 @Component({
@@ -40,6 +48,17 @@ export class RecipeDetail {
     } else {
       this.loading.set(false);
     }
+  }
+
+  /**
+   * Returns the unit text to display next to an ingredient's amount, hiding it
+   * for countable items (e.g. "4 Eier" instead of "4 piece Eier" or "4 Stück Eier").
+   *
+   * @param unit - The raw unit string from the recipe data.
+   * @returns An empty string for countable-item units, otherwise the unit unchanged.
+   */
+  displayUnit(unit: string): string {
+    return PIECE_UNITS.has(unit.toLowerCase()) ? '' : unit;
   }
 
   /**

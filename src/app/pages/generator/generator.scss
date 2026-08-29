@@ -213,7 +213,6 @@
       color: $color-green-dark;
       font-family: 'Quicksand', sans-serif;
       cursor: pointer;
-
     }
 
     .generate__icon-button {
@@ -276,8 +275,11 @@
       margin-top: 0.5rem;
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
       gap: 0.25rem;
+      background-color: $color-cream-highlight;
+      border-radius: 1.25rem;
+      padding: 0.5rem;
+      box-shadow: 0 0.25rem 0.75rem rgba(16, 49, 11, 0.2);
       opacity: 0;
       transform: translateY(-0.5rem);
       pointer-events: none;
@@ -294,12 +296,17 @@
       button {
         background: none;
         border: none;
-        padding: 0;
+        border-radius: 0.75rem;
+        padding: 0.35rem 0.75rem;
         color: $color-green-dark;
         font-family: 'Quicksand', sans-serif;
         font-size: 1rem;
         text-align: left;
         cursor: pointer;
+
+        @include hover {
+          background-color: $color-olive-highlight;
+        }
       }
     }
   }
@@ -343,23 +350,29 @@
   &__unit-list {
     position: absolute;
     top: 100%;
-    left: 1rem;
     margin-top: 0.5rem;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    gap: 0.25rem;
     z-index: 10;
+    background-color: $color-cream-highlight;
+    border-radius: 1.25rem;
+    padding: 0.5rem;
+    box-shadow: 0 0.25rem 0.75rem rgba(16, 49, 11, 0.2);
 
     button {
       background: none;
       border: none;
-      padding: 0;
+      border-radius: 0.75rem;
+      padding: 0.35rem 0.75rem;
       color: $color-green-dark;
       font-family: 'Quicksand', sans-serif;
       font-size: 1rem;
       text-align: left;
       cursor: pointer;
+
+      @include hover {
+        background-color: $color-olive-highlight;
+      }
     }
   }
 
@@ -479,7 +492,6 @@
     }
 
     @media (max-width: 30rem) {
-     
       margin-top: 0;
     }
 
