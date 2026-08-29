@@ -254,6 +254,10 @@
         white-space: nowrap;
       }
 
+      @media (max-width: 30rem) {
+        font-size: 0.875rem;
+      }
+
       @include hover {
         background-color: $color-olive-footer;
       }

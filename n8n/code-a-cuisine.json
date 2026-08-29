@@ -1,0 +1,668 @@
+{
+  "name": "Code-a-Cuisine",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-recipes ",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -288,
+        0
+      ],
+      "id": "baf16a40-29bb-44dd-9b4c-a2ad7eb3b31c",
+      "name": "Receive Recipe Request",
+      "webhookId": "e76f5291-f646-43eb-aa4e-ee308a2c58c5"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body;\nconst errors = [];\n\nif (!Array.isArray(body.ingredients) || body.ingredients.length === 0) {\n  errors.push('At least one ingredient is required.');\n}\n\nif (typeof body.servings !== 'number' || body.servings < 1 || body.servings > 12) {\n  errors.push('Servings must be between 1 and 12.');\n}\n\nconst validTimeCategories = ['quick', 'medium', 'elaborate'];\nif (!validTimeCategories.includes(body.timeCategory)) {\n  errors.push('Invalid time category.');\n}\n\nconst validCuisines = ['german', 'italian', 'japanese', 'indian', 'gourmet', 'fusion'];\nif (!validCuisines.includes(body.cuisine)) {\n  errors.push('Invalid cuisine.');\n}\n\nconst validDiets = ['vegetarian', 'vegan', 'keto', 'none'];\nif (!validDiets.includes(body.diet)) {\n  errors.push('Invalid diet.');\n}\n\nif (typeof body.helperCount !== 'number' || body.helperCount < 1 || body.helperCount > 4) {\n  errors.push('Helper count must be between 1 and 4.');\n}\n\nreturn [\n  {\n    json: {\n      ...body,\n      isValid: errors.length === 0,\n      validationErrors: errors,\n    },\n  },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -32,
+        0
+      ],
+      "id": "460ee801-98ec-4eff-8804-5eb99af331f9",
+      "name": "Validate Recipe Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "398201c7-9a3e-444c-b450-5cd5aac81a2d",
+              "leftValue": "={{ $json.isValid }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        224,
+        0
+      ],
+      "id": "005282e6-16cc-482d-801a-b80cccd780b1",
+      "name": "Is Request Valid?"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ error: \"Invalid request\", details: $json.validationErrors }) }}\n",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        336,
+        -272
+      ],
+      "id": "5b4478b0-0964-4685-9edf-a73b04155ae7",
+      "name": "Respond With Validation Error"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=={{ `You are a professional chef assistant. Generate exactly 3 different recipe suggestions based on the following request.\n\nRequested cuisine style: ${$('Validate Recipe Request').first().json.cuisine}\nDiet restriction: ${$('Validate Recipe Request').first().json.diet}\nTime category: ${$('Validate Recipe Request').first().json.timeCategory} (quick = up to 20 min, medium = 20-45 min, elaborate = 45+ min)\nServings: ${$('Validate Recipe Request').first().json.servings}\nNumber of cooking helpers: ${$('Validate Recipe Request').first().json.helperCount}\n\nAvailable ingredients:\n${JSON.stringify($('Validate Recipe Request').first().json.ingredients)}\n\nRules:\n- Each recipe must use at least 70% of the given ingredients.\n- Detect the language used in the ingredient names above (e.g. German, English) and write ALL free-text fields (name, extraIngredients[].name, directions[].title, directions[].description) in that same language. Do NOT translate the fixed values for \"diet\" and \"timeCategory\" — those must stay exactly as the English literals specified in the JSON structure below.\n- Each recipe may add at most 3 additional basic ingredients not in the list above.\n- The 3 recipes must differ from each other in preparation method and flavor profile.\n- Directions must be chronological, beginner-friendly, and clearly assign each step to one of the ${$('Validate Recipe Request').first().json.helperCount} available chef(s), numbered 1 to ${$('Validate Recipe Request').first().json.helperCount}. Steps that can happen at the same time should be marked as parallel.\n- If a step includes meaningful waiting time (e.g. marinating, resting dough), include it in waitMinutes, otherwise use null.\n- Calculate realistic nutrition values (energy in kcal, protein/carbs/fat in grams) per serving, and multiply by servings for the total.\n- Respond with ONLY a valid JSON array of exactly 3 recipe objects, no markdown formatting, no explanation text, matching exactly this structure:\n\n[\n  {\n    \"name\": \"string\",\n    \"diet\": \"vegetarian\" | \"vegan\" | \"keto\" | \"none\",\n    \"timeCategory\": \"quick\" | \"medium\" | \"elaborate\",\n    \"cookingTime\": number,\n    \"yourIngredients\": [{ \"amount\": number, \"unit\": \"g\" | \"piece\" | \"l\" | \"ml\" | \"el\" | \"tl\" | \"\", \"name\": \"string\" }],\n    \"extraIngredients\": [{ \"amount\": number, \"unit\": \"string\", \"name\": \"string\" }],\n    \"directions\": [{ \"step\": number, \"title\": \"string\", \"chef\": number, \"parallel\": boolean, \"waitMinutes\": number, \"description\": \"string\" }],\n    \"nutritionPerServing\": { \"energy\": number, \"protein\": number, \"carbs\": number, \"fat\": number }\n  }\n]` }}\n",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        832,
+        496
+      ],
+      "id": "107ee651-3d3f-4854-9465-6f3fc10ccfef",
+      "name": "Generate Recipes"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        832,
+        736
+      ],
+      "id": "8c10f334-de80-4a5d-b77b-d9badb928ca1",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "Wq35DkNKVmSCX4My",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawText = $input.first().json.text;\n\nlet cleaned = rawText.trim();\nif (cleaned.startsWith('```')) {\n  cleaned = cleaned.replace(/^```(json)?\\n/, '').replace(/```$/, '').trim();\n}\n\nlet recipes;\ntry {\n  recipes = JSON.parse(cleaned);\n} catch (error) {\n  throw new Error('Failed to parse Gemini response as JSON: ' + error.message);\n}\n\nif (!Array.isArray(recipes) || recipes.length !== 3) {\n  throw new Error('Expected exactly 3 recipes, got ' + (Array.isArray(recipes) ? recipes.length : typeof recipes));\n}\n\nconst requestData = $('Validate Recipe Request').first().json;\n\nconst enrichedRecipes = recipes.map((recipe) => {\n  const servings = requestData.servings;\n  const perServing = recipe.nutritionPerServing;\n\n  return {\n    ...recipe,\n    cuisine: requestData.cuisine,\n    servings,\n    likes: 0,\n    nutritionTotal: {\n      energy: perServing.energy * servings,\n      protein: perServing.protein * servings,\n      carbs: perServing.carbs * servings,\n      fat: perServing.fat * servings,\n    },\n    createdAt: Date.now(),\n  };\n});\n\nreturn enrichedRecipes.map((recipe) => ({ json: recipe }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1072,
+        16
+      ],
+      "id": "b643055d-8736-480b-be73-1b54aa52eb69",
+      "name": "Parse Generated Recipes"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=YOUR_FIREBASE_WEB_API_KEY",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"returnSecureToken\": true}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1376,
+        16
+      ],
+      "id": "45cd9d3c-82a8-442e-8735-1f8956fa09c0",
+      "name": "Sign In Anonymously"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://code-a-cuisine-4338d-default-rtdb.europe-west1.firebasedatabase.app/recipes.json?auth={{ $json.idToken }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.recipe }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1232,
+        224
+      ],
+      "id": "dd5ea7ee-877a-4c43-b143-9caa8e8ac368",
+      "name": "Save Recipe to Firebase"
+    },
+    {
+      "parameters": {
+        "jsCode": "const tokenItems = $input.all();\nconst recipeItems = $('Parse Generated Recipes').all();\n\nreturn tokenItems.map((item, index) => ({\n  json: {\n    idToken: item.json.idToken,\n    recipe: recipeItems[index].json,\n  },\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1664,
+        16
+      ],
+      "id": "397a8c9d-ab54-44ba-b156-d654e341ec89",
+      "name": "Combine Token and Recipe"
+    },
+    {
+      "parameters": {
+        "jsCode": "const firebaseResponses = $input.all();\nconst combinedItems = $('Combine Token and Recipe').all();\n\nreturn firebaseResponses.map((response, index) => ({\n  json: {\n    id: response.json.name,\n    ...combinedItems[index].json.recipe,\n  },\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        224
+      ],
+      "id": "87858184-9481-4a88-9895-42e107c670f8",
+      "name": "Attach Firebase ID"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst responseBody = JSON.stringify({ recipes: items.map((item) => item.json) });\nreturn [{ json: { responseBody } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1808,
+        224
+      ],
+      "id": "3b1e6259-f45f-4ea7-ac7f-e7698d6ab379",
+      "name": "Combine Final Recipes"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $('Combine Final Recipes').first().json.responseBody }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1264,
+        672
+      ],
+      "id": "b5cc576d-71d1-4252-bf40-d6b8f5a8e03e",
+      "name": "Respond With Recipes"
+    },
+    {
+      "parameters": {
+        "jsCode": "const headers = $('Receive Recipe Request').first().json.headers;\nconst forwardedFor = headers['x-forwarded-for'];\nconst rawIp = forwardedFor ? forwardedFor.split(',')[0].trim() : (headers['x-real-ip'] || 'unknown');\nconst safeIp = rawIp.replace(/[.#$\\[\\]]/g, '_');\nconst today = new Date().toISOString().slice(0, 10);\n\nreturn [{ json: { ip: safeIp, date: today } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        -16
+      ],
+      "id": "2c8a90e2-68dc-410b-a669-c4d420678a8f",
+      "name": "Extract Request Context"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=YOUR_FIREBASE_WEB_API_KEY",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"returnSecureToken\": true}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -224,
+        240
+      ],
+      "id": "17666a7c-f3c2-47c5-bfcf-67eb8d29c50f",
+      "name": "Sign In For Quota Check"
+    },
+    {
+      "parameters": {
+        "url": "=https://code-a-cuisine-4338d-default-rtdb.europe-west1.firebasedatabase.app/quota/{{ $('Extract Request Context').first().json.date }}/byIp/{{ $('Extract Request Context').first().json.ip }}.json?auth={{ $('Sign In For Quota Check').first().json.idToken }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        400,
+        240
+      ],
+      "id": "afc5b4f7-7d58-44bd-9e9c-ad75378f4e04",
+      "name": "Get IP Count"
+    },
+    {
+      "parameters": {
+        "url": "=https://code-a-cuisine-4338d-default-rtdb.europe-west1.firebasedatabase.app/quota/{{ $('Extract Request Context').first().json.date }}/total.json?auth={{ $json.idToken }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        208,
+        240
+      ],
+      "id": "ed469ac4-14e1-41f4-b95b-6405f4c9e6d9",
+      "name": "Get Total Count"
+    },
+    {
+      "parameters": {
+        "jsCode": "const ipCountData = $('Get IP Count').first().json;\nconst totalCountData = $('Get Total Count').first().json;\n\nconst ipCount = ipCountData.count || 0;\nconst totalCount = totalCountData.count || 0;\n\nconst MAX_PER_IP = 3;\nconst MAX_TOTAL = 12;\n\nconst quotaExceeded = ipCount >= MAX_PER_IP || totalCount >= MAX_TOTAL;\n\nreturn [{\n  json: {\n    ip: $('Extract Request Context').first().json.ip,\n    date: $('Extract Request Context').first().json.date,\n    ipCount,\n    totalCount,\n    quotaExceeded,\n    quotaStatus: quotaExceeded ? 'exceeded' : 'ok',\n    quotaMessage: quotaExceeded\n      ? (ipCount >= MAX_PER_IP\n          ? 'You have reached your daily limit of 3 recipe generations. Please try again tomorrow.'\n          : 'The daily system-wide limit has been reached. Please try again tomorrow.')\n      : ''\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        480
+      ],
+      "id": "50d1ec6f-48f1-41dc-82a0-ac07173d0e36",
+      "name": "Check Quota"
+    },
+    {
+      "parameters": {
+        "jsCode": "const responseBody = JSON.stringify({ error: 'Quota exceeded', message: $json.quotaMessage });\nreturn [{ json: { responseBody } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        112,
+        720
+      ],
+      "id": "2cc0154e-83d0-4e08-8968-2c86e1d948a4",
+      "name": "Build Quota Error Response"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json.responseBody }}",
+        "options": {
+          "responseCode": 429
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        352,
+        720
+      ],
+      "id": "eb2485fa-fe5f-4b1d-b896-84dc0c089ecc",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "34eb82f9-6c0f-4f6c-a7b5-d2ccab924db2",
+              "leftValue": "={{ $json.quotaStatus }}",
+              "rightValue": "exceeded",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        208,
+        480
+      ],
+      "id": "163504c3-17a9-4594-b352-16a4234b61b3",
+      "name": "Is Quota Available?"
+    },
+    {
+      "parameters": {
+        "jsCode": "const checkQuotaData = $('Check Quota').first().json;\n\nconst newIpCount = checkQuotaData.ipCount + 1;\nconst newTotalCount = checkQuotaData.totalCount + 1;\n\nreturn [{\n  json: {\n    ip: checkQuotaData.ip,\n    date: checkQuotaData.date,\n    idToken: $('Sign In For Quota Check').first().json.idToken,\n    ipBody: JSON.stringify({ count: newIpCount }),\n    totalBody: JSON.stringify({ count: newTotalCount }),\n    newIpCount,\n    newTotalCount\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1248,
+        448
+      ],
+      "id": "a52f0d1e-4846-4365-90b1-6bd1ea6bcc48",
+      "name": "Prepare Quota Increment"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://code-a-cuisine-4338d-default-rtdb.europe-west1.firebasedatabase.app/quota/{{ $('Prepare Quota Increment').first().json.date }}/total.json?auth={{ $('Prepare Quota Increment').first().json.idToken }}\n",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $('Prepare Quota Increment').first().json.totalBody }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1696,
+        448
+      ],
+      "id": "12b2696d-b69f-4b4e-bc36-1376a0b9be62",
+      "name": "Increment Total Count"
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://code-a-cuisine-4338d-default-rtdb.europe-west1.firebasedatabase.app/quota/{{ $json.date }}/byIp/{{ $json.ip }}.json?auth={{ $json.idToken }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.ipBody }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1472,
+        448
+      ],
+      "id": "27eeb156-6965-4460-a459-7c1e184da6b1",
+      "name": "Increment IP Count"
+    }
+  ],
+  "connections": {
+    "Receive Recipe Request": {
+      "main": [
+        [
+          {
+            "node": "Validate Recipe Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Recipe Request": {
+      "main": [
+        [
+          {
+            "node": "Is Request Valid?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Request Valid?": {
+      "main": [
+        [
+          {
+            "node": "Extract Request Context",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond With Validation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Recipes",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Recipes": {
+      "main": [
+        [
+          {
+            "node": "Parse Generated Recipes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sign In Anonymously": {
+      "main": [
+        [
+          {
+            "node": "Combine Token and Recipe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Recipe to Firebase": {
+      "main": [
+        [
+          {
+            "node": "Attach Firebase ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Token and Recipe": {
+      "main": [
+        [
+          {
+            "node": "Save Recipe to Firebase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Generated Recipes": {
+      "main": [
+        [
+          {
+            "node": "Sign In Anonymously",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Attach Firebase ID": {
+      "main": [
+        [
+          {
+            "node": "Combine Final Recipes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Final Recipes": {
+      "main": [
+        [
+          {
+            "node": "Prepare Quota Increment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Request Context": {
+      "main": [
+        [
+          {
+            "node": "Sign In For Quota Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sign In For Quota Check": {
+      "main": [
+        [
+          {
+            "node": "Get Total Count",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Total Count": {
+      "main": [
+        [
+          {
+            "node": "Get IP Count",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get IP Count": {
+      "main": [
+        [
+          {
+            "node": "Check Quota",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Quota": {
+      "main": [
+        [
+          {
+            "node": "Is Quota Available?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Quota Error Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Quota Available?": {
+      "main": [
+        [
+          {
+            "node": "Build Quota Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generate Recipes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Quota Increment": {
+      "main": [
+        [
+          {
+            "node": "Increment IP Count",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Increment Total Count": {
+      "main": [
+        [
+          {
+            "node": "Respond With Recipes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Increment IP Count": {
+      "main": [
+        [
+          {
+            "node": "Increment Total Count",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "oMmRa4PDGZXUSpBV",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "pinData": {},
+  "versionId": "7f900668-d81a-4753-8dfc-45b4f94ce454",
+  "id": "7HVCuTPR3doVIKDW"
+}

@@ -54,6 +54,13 @@ export const TIME_CATEGORY_LABELS: Record<TimeCategory, string> = {
   elaborate: 'Elaborate',
 };
 
+/**
+ * Returns the display tags for a recipe (diet + time category) as human-readable labels.
+ * Empty labels (e.g. for diet "none") are filtered out.
+ *
+ * @param recipe - The recipe to derive display tags from.
+ * @returns An array of non-empty label strings.
+ */
 export function getDisplayTags(recipe: Recipe): string[] {
   return [DIET_LABELS[recipe.diet], TIME_CATEGORY_LABELS[recipe.timeCategory]].filter(Boolean);
 }

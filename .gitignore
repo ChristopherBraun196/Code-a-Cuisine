@@ -47,6 +47,7 @@ Thumbs.db
 
 # Lokale Arbeits-Logs (Claude Code / Git-Hooks)
 /logs
+**/logs
 CLAUDE.md
 Checklist
 
@@ -56,3 +57,8 @@ Checklist
 # Firebase Admin SDK Service Account (Geheimnis, nie committen)
 *firebase-adminsdk*.json
 serviceAccountKey.json
+
+# Echte Firebase-Config mit Zugangsdaten (nie committen) — Platzhalter-Vorlagen liegen
+# in environment.example.ts / environment.development.example.ts im Repo
+src/environments/environment.ts
+src/environments/environment.development.ts

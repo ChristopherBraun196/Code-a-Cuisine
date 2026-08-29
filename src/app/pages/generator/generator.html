@@ -126,14 +126,11 @@
       <button
         type="button"
         class="generate__next-button"
-        [disabled]="ingredients().length === 0"
+        [class.generate__next-button--empty]="ingredients().length === 0"
         (click)="goToNextStep()"
       >
         Next step
       </button>
-      <p class="generate__error" [class.generate__error--visible]="showNoIngredientsError()">
-        Please 1 ingredient
-      </p>
     </div>
   </div>
 </section>

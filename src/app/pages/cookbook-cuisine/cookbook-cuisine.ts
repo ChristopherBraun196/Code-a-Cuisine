@@ -11,6 +11,7 @@ import { Recipes } from '../../shared/services/recipes';
   styleUrl: './cookbook-cuisine.scss',
   templateUrl: './cookbook-cuisine.html',
 })
+/** Paginated recipe list for a single cuisine (route: `/cookbook/:cuisine`). */
 export class CookbookCuisine {
   private route = inject(ActivatedRoute);
   private recipesService = inject(Recipes);
@@ -65,22 +66,30 @@ export class CookbookCuisine {
     });
   }
 
+  /**
+   * Navigates to a specific page of results and scrolls back to the top.
+   *
+   * @param page - The 1-based page number to show.
+   */
   goToPage(page: number): void {
     this.currentPage.set(page);
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
+  /** Navigates to the previous page of results, if any, and scrolls back to the top. */
   prevPage(): void {
     this.currentPage.update((page) => Math.max(1, page - 1));
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
+  /** Navigates to the next page of results, if any, and scrolls back to the top. */
   nextPage(): void {
     this.currentPage.update((page) => Math.min(this.totalPages(), page + 1));
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
 }
 
+/** Display name and hero images per cuisine slug, keyed by route parameter. */
 const CUISINE_INFO: Record<string, { name: string; heroDesktop: string; heroMobile: string }> = {
   italian: {
     name: 'Italian cuisine',

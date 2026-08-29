@@ -7,4 +7,5 @@ import { RouterLink } from '@angular/router';
   styleUrl: './home.scss',
   templateUrl: './home.html',
 })
+/** Landing page introducing the app and linking to the recipe generator and cookbook. */
 export class Home {}

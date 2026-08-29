@@ -1,0 +1,63 @@
+{
+  "name": "Code-a-Cuisine - Error Handler",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "43608a1d-a5c4-4534-aabb-cad0637cc249",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "fromEmail": "code-a-cuisine@christopher-braun-dev.de",
+        "toEmail": "dev.christopher.braun@gmail.com",
+        "subject": "Code a Cuisine - Workflow Error",
+        "emailFormat": "text",
+        "text": "=Ein Fehler ist im Workflow \"{{ $json.workflow.name }}\" aufgetreten.\n\nNode: {{ $json.execution.lastNodeExecuted }}\nFehlermeldung: {{ $json.execution.error.message }}\nZeitpunkt: {{ $now }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "3aa4ab93-5139-4a4f-95a9-f19d104f68da",
+      "name": "Send an Email",
+      "webhookId": "864ec32a-a541-4e41-a008-b5d1b17f9b38",
+      "credentials": {
+        "smtp": {
+          "id": "fUkD98Usr5zT9A46",
+          "name": "SMTP JOIN"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send an Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "pinData": {},
+  "versionId": "3032ef61-606f-4afe-aee1-1cefb37c9438",
+  "id": "oMmRa4PDGZXUSpBV"
+}

@@ -10,6 +10,7 @@ import { Generating } from './pages/generating/generating';
 import { Results } from './pages/results/results';
 import { CookbookCuisine } from './pages/cookbook-cuisine/cookbook-cuisine';
 
+/** Route definitions for the application. */
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'generate', component: Generator },

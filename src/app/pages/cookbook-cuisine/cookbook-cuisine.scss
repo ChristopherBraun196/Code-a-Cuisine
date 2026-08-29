@@ -133,7 +133,7 @@
       align-items: center;
       gap: 0.35rem;
       color: $color-green-dark;
-      font-size: 0.85rem;
+      font-size: 0.875rem;
       margin: 0;
 
       img {
@@ -175,13 +175,12 @@
   &__tag {
     background-color: $color-olive-light;
     color: $color-green-dark;
-    font-size: 0.8rem;
+    font-size: 0.875rem;
     padding: 0.3rem 0.75rem;
     border-radius: 999px;
     white-space: nowrap;
 
     @media (max-width: 30rem) {
-      font-size: 0.75rem;
       padding: 0.35rem 0.6rem;
     }
   }
@@ -192,7 +191,7 @@
     gap: 0.25rem;
     background-color: $color-olive-highlight;
     color: $color-green-dark;
-    font-size: 0.8rem;
+    font-size: 0.875rem;
     padding: 0.3rem 0.6rem;
     border-radius: 999px;
 
@@ -202,7 +201,7 @@
     }
 
     @media (max-width: 30rem) {
-      font-size: 0.75rem;
+      font-size: 0.875rem;
       padding: 0.35rem 0.55rem;
 
       img {

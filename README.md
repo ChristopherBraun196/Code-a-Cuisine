@@ -36,7 +36,7 @@ npm install
 
 ### Firebase configuration
 
-Firebase credentials live in `src/environments/environment.ts` and `environment.development.ts` (under the `firebase` key). Both files are generated via `ng generate environments` and are not part of the repo — add your own `firebaseConfig` from the Firebase console there.
+Firebase credentials live in `src/environments/environment.ts` and `environment.development.ts` (under the `firebase` key). Both files are gitignored and not part of the repo. Copy `environment.example.ts` → `environment.ts` and `environment.development.example.ts` → `environment.development.ts`, then fill in your own `firebaseConfig` from the Firebase console and your n8n webhook URL.
 
 ### Development server
 

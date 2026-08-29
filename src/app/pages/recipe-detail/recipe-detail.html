@@ -37,7 +37,7 @@
           </div>
 
           <div class="recipe-detail__nutrition">
-            <p class="recipe-detail__nutrition-label">Nutritional information</p>
+            <p class="recipe-detail__nutrition-label">Nutritional information (per serving)</p>
             <div class="recipe-detail__nutrition-values">
               <div class="recipe-detail__nutrition-item">
                 <span class="recipe-detail__nutrition-name">Energie</span>
@@ -48,20 +48,50 @@
               <div class="recipe-detail__nutrition-item">
                 <span class="recipe-detail__nutrition-name">Protein</span>
                 <span class="recipe-detail__nutrition-value"
-                  >{{ recipe.nutritionPerServing.protein }}g</span
+                  >{{ recipe.nutritionPerServing.protein }}g ({{
+                    macroPercent('protein', recipe.nutritionPerServing)
+                  }}%)</span
                 >
               </div>
               <div class="recipe-detail__nutrition-item">
                 <span class="recipe-detail__nutrition-name">Fat</span>
                 <span class="recipe-detail__nutrition-value"
-                  >{{ recipe.nutritionPerServing.fat }}g</span
+                  >{{ recipe.nutritionPerServing.fat }}g ({{
+                    macroPercent('fat', recipe.nutritionPerServing)
+                  }}%)</span
                 >
               </div>
               <div class="recipe-detail__nutrition-item">
                 <span class="recipe-detail__nutrition-name">Carbs</span>
                 <span class="recipe-detail__nutrition-value"
-                  >{{ recipe.nutritionPerServing.carbs }}g</span
+                  >{{ recipe.nutritionPerServing.carbs }}g ({{
+                    macroPercent('carbs', recipe.nutritionPerServing)
+                  }}%)</span
                 >
+              </div>
+            </div>
+
+            <p class="recipe-detail__nutrition-label recipe-detail__nutrition-label--total">
+              Total for {{ recipe.servings }} servings
+            </p>
+            <div class="recipe-detail__nutrition-values">
+              <div class="recipe-detail__nutrition-item">
+                <span class="recipe-detail__nutrition-name">Energie</span>
+                <span class="recipe-detail__nutrition-value"
+                  >{{ recipe.nutritionTotal.energy }} kcal</span
+                >
+              </div>
+              <div class="recipe-detail__nutrition-item">
+                <span class="recipe-detail__nutrition-name">Protein</span>
+                <span class="recipe-detail__nutrition-value">{{ recipe.nutritionTotal.protein }}g</span>
+              </div>
+              <div class="recipe-detail__nutrition-item">
+                <span class="recipe-detail__nutrition-name">Fat</span>
+                <span class="recipe-detail__nutrition-value">{{ recipe.nutritionTotal.fat }}g</span>
+              </div>
+              <div class="recipe-detail__nutrition-item">
+                <span class="recipe-detail__nutrition-name">Carbs</span>
+                <span class="recipe-detail__nutrition-value">{{ recipe.nutritionTotal.carbs }}g</span>
               </div>
             </div>
           </div>

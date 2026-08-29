@@ -102,7 +102,7 @@
       height: auto;
     }
 
-    @media (max-width: 30rem) {
+    @media (max-width: 39.375rem) {
       flex-direction: column;
       height: 14rem;
       gap: 1rem;
@@ -409,8 +409,9 @@
         width: 14rem;
       }
 
-      @media (max-width: 30rem) {
+      @media (max-width: 39.375rem) {
         width: 100%;
+        max-width: 30rem;
         margin-top: 0.5rem;
       }
     }
@@ -472,10 +473,9 @@
     margin-top: 2rem;
     cursor: pointer;
 
-    &:disabled {
+    &--empty {
       background-color: $color-olive-light;
       color: $color-olive;
-      cursor: not-allowed;
     }
 
     @media (max-width: 30rem) {

@@ -7,4 +7,5 @@ import { RouterLink } from '@angular/router';
   styleUrl: './privacy-policy.scss',
   templateUrl: './privacy-policy.html',
 })
+/** Privacy policy page. */
 export class PrivacyPolicy {}
