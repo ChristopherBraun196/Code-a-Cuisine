@@ -17,7 +17,7 @@ export interface Recipe {
 
 export interface Ingredient {
   amount: number | null;
-  unit: 'g' | 'piece' | 'l' | 'ml' | 'el' | 'tl' | '';
+  unit: 'g' | 'piece' | 'l' | 'ml' | 'tbsp' | 'tsp' | '';
   name: string;
 }
 

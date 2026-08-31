@@ -3,6 +3,13 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RecipeGenerator } from '../../shared/services/recipe-generator';
 
+/** Allows only letters (incl. umlauts/accents), spaces, hyphens, and apostrophes. */
+const NAME_PATTERN = /^[\p{L}\s'-]+$/u;
+/** Requires at least one vowel, to reject keyboard-mashed input like "dfgbrbdfdb". */
+const VOWEL_PATTERN = /[aeiouyäöüàáâãåæèéêëìíîïòóôõøùúûý]/i;
+/** Rejects the same character repeated 3+ times in a row (e.g. "aaaa", "xxxxx"). */
+const REPEATED_CHAR_PATTERN = /(.)\1{2,}/i;
+
 /** First step of the recipe wizard: lets the user add, edit, and remove ingredients. */
 @Component({
   imports: [FormsModule],
@@ -46,9 +53,29 @@ export class Generator {
     this.isUnitOpen.set(false);
   }
 
+  /**
+   * Checks whether an ingredient name is non-empty, contains only letters,
+   * spaces, hyphens, and apostrophes, has at least one vowel, and has no
+   * character repeated 3+ times in a row. This is a heuristic to catch
+   * keyboard-mashed input (e.g. "dfgbrbdfdb") — it cannot verify the name is
+   * an actual, real-world ingredient.
+   *
+   * @param name - The ingredient name to validate.
+   * @returns `true` if the name is invalid.
+   */
+  isNameInvalid(name: string): boolean {
+    const trimmed = name.trim();
+    return (
+      !trimmed ||
+      !NAME_PATTERN.test(trimmed) ||
+      !VOWEL_PATTERN.test(trimmed) ||
+      REPEATED_CHAR_PATTERN.test(trimmed)
+    );
+  }
+
   /** Validates and adds the currently entered ingredient to the list, then resets the form fields. */
   addIngredient(): void {
-    if (!this.newName.trim() || !this.newAmount || !this.newUnit) {
+    if (this.isNameInvalid(this.newName) || !this.newAmount || !this.newUnit) {
       this.showNameError.set(true);
       return;
     }

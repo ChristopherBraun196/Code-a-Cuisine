@@ -86,6 +86,8 @@ export class RecipeGenerator {
         this.http.post<{ recipes: Recipe[] }>(environment.n8nWebhookUrl, body),
       );
       this.results.set(response.recipes);
+      this.ingredients.set([]);
+      this.preferences.set(null);
       localStorage.removeItem(INGREDIENTS_KEY);
       localStorage.removeItem(PREFERENCES_KEY);
     } catch (error: any) {
