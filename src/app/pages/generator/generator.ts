@@ -6,9 +6,11 @@ import { RecipeGenerator } from '../../shared/services/recipe-generator';
 /** Allows only letters (incl. umlauts/accents), spaces, hyphens, and apostrophes. */
 const NAME_PATTERN = /^[\p{L}\s'-]+$/u;
 /** Requires at least one vowel, to reject keyboard-mashed input like "dfgbrbdfdb". */
-const VOWEL_PATTERN = /[aeiouyäöüàáâãåæèéêëìíîïòóôõøùúûý]/i;
+const VOWEL_PATTERN = /[aeiouäöüàáâãåæèéêëìíîïòóôõøùúûý]/i;
 /** Rejects the same character repeated 3+ times in a row (e.g. "aaaa", "xxxxx"). */
 const REPEATED_CHAR_PATTERN = /(.)\1{2,}/i;
+/** Rejects 4+ consonants in a row, to catch mashed input that still contains a vowel (e.g. "dweqdwq"). */
+const CONSONANT_RUN_PATTERN = /[^aeiouäöüàáâãåæèéêëìíîïòóôõøùúûý\s'-]{4,}/i;
 
 /** First step of the recipe wizard: lets the user add, edit, and remove ingredients. */
 @Component({
@@ -69,7 +71,8 @@ export class Generator {
       !trimmed ||
       !NAME_PATTERN.test(trimmed) ||
       !VOWEL_PATTERN.test(trimmed) ||
-      REPEATED_CHAR_PATTERN.test(trimmed)
+      REPEATED_CHAR_PATTERN.test(trimmed) ||
+      CONSONANT_RUN_PATTERN.test(trimmed)
     );
   }
 
