@@ -1,4 +1,4 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RecipeGenerator } from '../../shared/services/recipe-generator';
@@ -134,6 +134,25 @@ export class Generator {
   selectEditUnit(unit: Ingredient['unit']): void {
     this.editUnit = unit;
     this.isEditUnitOpen.set(false);
+  }
+
+  /**
+   * Closes both unit dropdowns when the user clicks anywhere outside of them.
+   *
+   * @param target - The element that was clicked.
+   */
+  @HostListener('document:click', ['$event.target'])
+  onDocumentClick(target: EventTarget | null): void {
+    if (!(target instanceof Element)) {
+      return;
+    }
+
+    if (!target.closest('.generate__unit-dropdown')) {
+      this.isUnitOpen.set(false);
+    }
+    if (!target.closest('.generate__edit-unit-dropdown')) {
+      this.isEditUnitOpen.set(false);
+    }
   }
 
   /**

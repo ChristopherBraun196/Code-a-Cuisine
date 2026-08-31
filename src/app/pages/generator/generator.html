@@ -13,7 +13,7 @@
           id="ingredientName"
           [ngModel]="newName"
           (ngModelChange)="newName = $event; showNameError.set(false)"
-          (blur)="showNameError.set(isNameInvalid(newName))"
+          (blur)="newName.trim() && showNameError.set(isNameInvalid(newName))"
           [class.generate__input--error]="showNameError()"
         />
         <p class="generate__error" [class.generate__error--visible]="showNameError()">
